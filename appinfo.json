@@ -1,0 +1,9 @@
+{
+	"id": "com.sicong.weibofortouchpad",
+	"version": "1.0.0",
+	"vendor": "Sicong",
+	"type": "web",
+	"main": "index.html",
+	"title": "Weibo",
+	"uiRevision": "2"
+}
