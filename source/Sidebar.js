@@ -1,5 +1,5 @@
 enyo.kind({
-	name: "WeiboTablet.Sidebar",
+	name: "Weibo.Sidebar",
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
 	components: 
