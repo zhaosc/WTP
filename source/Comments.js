@@ -1,5 +1,5 @@
 enyo.kind({
-	name: "Weibo.Comments",
+	name: "WeiboTablet.Comments",
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
 	components: 
