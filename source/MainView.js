@@ -9,6 +9,11 @@ enyo.kind
         onSuccess: "grabTimelineSuccess",
         onFailure: "grabTimelineFailure"
     },{
+        kind: "WebService", 
+        name: "grabCounts", 
+        onSuccess: "grabCountsSuccess",
+        onFailure: "grabCountsFailure"
+    },{
         kind: "Popup",
         name: "timelineFailurePopup",
         components:
@@ -46,6 +51,7 @@ enyo.kind
     ready: function()
     {
         this.timeline = [];
+        this.counts = [];
         
         var url = WeiboUtil.get("statuses/friends_timeline.json");
         this.$.grabTimeline.setUrl(url);
@@ -54,11 +60,37 @@ enyo.kind
     grabTimelineSuccess: function(inSender, inResponse, inRequest)
     {
         this.timeline = inResponse;
-        this.$.timelineView.$.timeline.render();
+        
+        var ids = "";
+        for (var i = 0; i < inResponse.length; i++)
+        {
+        	ids += inResponse[i].id + ",";
+        	
+        	if (inResponse[i].retweeted_status)
+    		{
+        		ids += inResponse[i].retweeted_status.id + ",";
+    		}
+        }
+        
+        ids = ids.substring(0, ids.length - 1);
+        
+        var url = WeiboUtil.get("statuses/counts.json", "ids=" + ids);
+        this.$.grabCounts.setUrl(url);
+        this.$.grabCounts.call();
     },
     grabTimelineFailure: function()
     {
         this.$.timelineFailurePopup.openAtCenter();
         this.$.timelineFailureText.setContent("Update failed. Please try again.");
     },
+    grabCountsSuccess: function(inSender, inResponse, inRequest)
+    {
+    	this.counts = inResponse;
+    	this.$.timelineView.$.timeline.render();
+    },
+    grabCountsFailure: function()
+    {
+    	this.$.timelineFailurePopup.openAtCenter();
+    	this.$.timelineFailureText.setContent("Update failed. Please try again.");
+    }
 });

@@ -1,6 +1,27 @@
+body {
+	color: #777;
+}
+
+.none {
+	margin: 0;
+	padding: 0;
+	height: 0;
+	width: 0;	
+}
+
+.grey_text {
+	color: #999;
+}
+
 .timeline {
-    background: #FFFFFF;
-    font-size: 0.75em;
+    background: #fff;
+    padding: 15px;
+}
+
+.timeline_text {
+	padding-left: 20px;
+	font-size: 15px;
+	line-height: 170%;
 }
 
 .timeline_username {
@@ -9,4 +30,63 @@
     white-space: nowrap; 
     font-weight: bold; 
     color: #3EA3BD;
+    font-size: 16px;
+    padding-bottom: 5px;
 }
+
+.avatar {
+	box-shadow: 0 0 5px 0 #888;
+	border-radius: 17px;
+}
+
+.created_at {
+	padding: 10px 0 0 0;
+	font-size: 14px;
+}
+
+.source {
+	padding: 10px 0 0 20px;
+	font-size: 14px;
+}
+
+.counts {
+	padding: 10px 0 0 10px;
+	font-size: 14px;
+}
+
+.retweeted {
+	background: #f9f9f9;
+	padding: 15px 20px;
+	margin-top: 10px;
+}
+
+.timeline_text_retweeted {
+	font-size: 14px;
+	line-height: 170%;
+}
+
+.timeline_username_retweeted {
+    text-overflow: ellipsis; 
+    overflow: hidden;
+    white-space: nowrap; 
+    font-weight: bold; 
+    color: #3EA3BD;
+    font-size: 15px;
+    padding-bottom: 5px;
+}
+
+.created_at_retweeted {
+	padding: 6px 0 0 0;
+	font-size: 13px;
+}
+
+.source_retweeted {
+	padding: 6px 0 0 16px;
+	font-size: 13px;
+}
+
+.counts_retweeted {
+	padding: 6px 0 0 10px;
+	font-size: 13px;
+}
+
