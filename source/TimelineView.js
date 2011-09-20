@@ -5,20 +5,24 @@ enyo.kind({
     components: 
     [{
         kind: enyo.Header,
-        style: "min-height: 60px;",
+        className: "newTimeline",
         layoutKind: enyo.HFlexLayout,
         components:
         [{
-            kind: enyo.InputBox,
-            flex: 1,
-            style: "height: 60px;",
+        	content: "picture icon"
+        },{
+            kind: enyo.Input,
+            name: "newTimelineInput",
+            oninput: "countCharacters",
+            hint: "what",
             alwaysLooksFocused: true,
-            components: 
-            [{
-                kind: enyo.BasicRichText,
-                flex: 1, 
-                className: "enyo-input-inner"
-            }]
+            flex: 1,
+            inputClassName: "newTimelineInputInner",
+            className: "newTimelineInput",
+            styled: false
+        },{
+        	name: "charactersCount",
+        	content: "140 left"
         }]
     },{
         kind: enyo.Scroller,
@@ -187,14 +191,7 @@ enyo.kind({
             }
             else
             {
-            	this.$.retweetedTimeline.setClassName("none");
-            	this.$.retweetedText.setClassName("none");
-                this.$.retweetedUsername.setClassName("none");
-                this.$.retweetedCreatedAt.setClassName("none");
-                this.$.retweetedSource.setClassName("none");
-                this.$.retweetedComments.setContent("");
-                this.$.retweetedAddToFavorite.setContent("");
-                this.$.retweetedRt.setContent("");
+            	this.$.retweetedTimeline.hide();
             }
             
             return true;
@@ -209,5 +206,10 @@ enyo.kind({
     			return this.owner.counts[i];
 			}
 		}
+    },
+    countCharacters: function()
+    {
+    	var length = 139 - this.$.newTimelineInput.value.length;
+    	this.$.charactersCount.setContent(length + " left");
     }
 });

@@ -1,21 +1,42 @@
 body {
 	color: #777;
-}
-
-.none {
-	margin: 0;
-	padding: 0;
-	height: 0;
-	width: 0;	
+	line-height: 170%;
 }
 
 .grey_text {
 	color: #999;
 }
 
+/*New timeline*/
+.newTimeline {
+	-webkit-border-image: url("") 1 0;
+	min-height: 60px;
+	background: #f9f9f9;
+	border-bottom: 1px solid #ddd;
+}
+
+.newTimelineInput {
+	background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px 15px;
+    line-height: 160%;
+    margin: 0 12px;
+    color: #777;
+    font-size: 15px;
+}
+
+.newTimelineInputInner {
+	background: #fff;
+    color: #777;
+    font-size: 15px;
+}
+
+/*Timeline items*/
 .timeline {
     background: #fff;
     padding: 15px;
+    border-bottom: 1px solid #ddd;
 }
 
 .timeline_text {
@@ -35,8 +56,7 @@ body {
 }
 
 .avatar {
-	box-shadow: 0 0 5px 0 #888;
-	border-radius: 17px;
+	border-radius: 3px;
 }
 
 .created_at {
@@ -58,11 +78,12 @@ body {
 	background: #f9f9f9;
 	padding: 15px 20px;
 	margin-top: 10px;
+	border-radius: 3px;
+	border: 0;
 }
 
 .timeline_text_retweeted {
 	font-size: 14px;
-	line-height: 170%;
 }
 
 .timeline_username_retweeted {
