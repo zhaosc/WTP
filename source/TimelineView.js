@@ -5,20 +5,20 @@ enyo.kind({
     components: 
     [{
         kind: enyo.Header,
-        className: "newTimeline",
+        className: "new_timeline",
         layoutKind: enyo.HFlexLayout,
         components:
         [{
         	content: "picture icon"
         },{
             kind: enyo.Input,
-            name: "newTimelineInput",
+            name: "new_timeline_input",
             oninput: "countCharacters",
             hint: "what",
             alwaysLooksFocused: true,
             flex: 1,
-            inputClassName: "newTimelineInputInner",
-            className: "newTimelineInput",
+            inputClassName: "new_timeline_input_inner",
+            className: "new_timeline_input",
             styled: false
         },{
         	name: "charactersCount",
