@@ -1,10 +1,10 @@
 var WeiboUtil = (function (WeiboUtil) {
 
-   var baseURL = "http://api.t.sina.com.cn/";
-   var appKey = "61780054";
+   var baseURL = "http://api.t.sina.com.cn/",
+   	   appKey = "61780054",
+   	   secret = "d443b764c8b523e6e6c6ad254f6e369f";
 
    WeiboUtil.get = function () {
-	   
 	   var url = baseURL + arguments[0] + "?source=" + appKey;
 	   
 	   if (arguments.length > 1)
@@ -15,6 +15,176 @@ var WeiboUtil = (function (WeiboUtil) {
 	   }
 
 	   return url;
+   };
+   
+   WeiboUtil.getFriendsTimelineURL = function(oauth_token, oauth_token_secret) {
+	   var oauth_consumer_key = appKey,
+	   consumerSecret = secret,
+	   oauth_signature_method = "HMAC-SHA1",
+	   oauth_timestamp = OAuth.timestamp(),
+	   oauth_nonce = OAuth.nonce(32),
+	   oauth_version = "1.0",
+	   //since_id = "",
+	   //max_id = "",
+	   count = 20,
+	   page = 1,
+	   base_app = 0,
+	   feature = 0,
+	   method = "GET",
+	   action = "http://api.t.sina.com.cn/statuses/friends_timeline.json",
+	   parameters = 
+	   {
+		   oauth_consumer_key: oauth_consumer_key,
+		   oauth_nonce: oauth_nonce,
+		   oauth_signature_method: oauth_signature_method,
+		   oauth_timestamp: oauth_timestamp,
+		   oauth_token: oauth_token,
+		   oauth_version: oauth_version
+	   },
+	   baseString = OAuth.SignatureMethod.getBaseString({
+		   method: method, 
+		   action: action, 
+		   parameters: parameters
+	   }),
+	   signer = OAuth.SignatureMethod.newMethod(
+			   oauth_signature_method, 
+			   {consumerSecret: consumerSecret, tokenSecret: oauth_token_secret}
+	   ),
+	   oauth_signature = signer.getSignature(baseString);
+	   
+	   return action +
+	   "?oauth_consumer_key=" + oauth_consumer_key + 
+	   "&oauth_token=" + oauth_token + 
+	   "&oauth_nonce=" + oauth_nonce + 
+	   "&oauth_signature_method=" + oauth_signature_method + 
+	   "&oauth_timestamp=" + oauth_timestamp +
+	   "&oauth_version=" + oauth_version +
+	   "&oauth_signature=" + encodeURIComponent(oauth_signature);
+   };
+   
+   WeiboUtil.getCountsURL = function(oauth_token, oauth_token_secret, ids) {
+	   var oauth_consumer_key = appKey,
+	   consumerSecret = secret,
+	   oauth_signature_method = "HMAC-SHA1",
+	   oauth_timestamp = OAuth.timestamp(),
+	   oauth_nonce = OAuth.nonce(32),
+	   oauth_version = "1.0",
+	   method = "GET",
+	   action = "http://api.t.sina.com.cn/statuses/counts.json",
+	   parameters = 
+	   {
+		   oauth_consumer_key: oauth_consumer_key,
+		   oauth_nonce: oauth_nonce,
+		   oauth_token: oauth_token,
+		   oauth_signature_method: oauth_signature_method,
+		   oauth_timestamp: oauth_timestamp,
+		   oauth_version: oauth_version,
+		   ids: ids
+	   },
+	   baseString = OAuth.SignatureMethod.getBaseString({
+		   method: method, 
+		   action: action, 
+		   parameters: parameters
+	   }),
+	   signer = OAuth.SignatureMethod.newMethod(
+			   oauth_signature_method, 
+			   {consumerSecret: consumerSecret, tokenSecret: oauth_token_secret}
+	   ),
+	   oauth_signature = signer.getSignature(baseString);
+	   
+	   return action +
+	   "?oauth_consumer_key=" + oauth_consumer_key + 
+	   "&oauth_token=" + oauth_token + 
+	   "&oauth_nonce=" + oauth_nonce + 
+	   "&oauth_signature_method=" + oauth_signature_method + 
+	   "&oauth_timestamp=" + oauth_timestamp +
+	   "&oauth_version=" + oauth_version +
+	   "&oauth_signature=" + encodeURIComponent(oauth_signature) + 
+	   "&ids=" + ids;
+   };
+   
+   WeiboUtil.getRequestTokenURL = function() {
+	   var oauth_consumer_key = appKey,
+		   consumerSecret = secret,
+		   oauth_signature_method = "HMAC-SHA1",
+		   oauth_timestamp = OAuth.timestamp(),
+		   oauth_nonce = OAuth.nonce(32),
+		   oauth_version = "1.0",
+		   method = "GET",
+		   action = "http://api.t.sina.com.cn/oauth/request_token",
+		   parameters = 
+		   {
+			   oauth_consumer_key: oauth_consumer_key,
+			   oauth_nonce: oauth_nonce,
+			   oauth_signature_method: oauth_signature_method,
+			   oauth_timestamp: oauth_timestamp,
+			   oauth_version: oauth_version
+		   },
+		   baseString = OAuth.SignatureMethod.getBaseString({
+			   method: method, 
+			   action: action, 
+			   parameters: parameters
+		   }),
+		   signer = OAuth.SignatureMethod.newMethod(
+				   oauth_signature_method, 
+				   {consumerSecret: consumerSecret, tokenSecret: null}
+		   ),
+		   oauth_signature = signer.getSignature(baseString);
+	
+	   return action +
+		   "?oauth_consumer_key=" + oauth_consumer_key + 
+		   "&oauth_nonce=" + oauth_nonce + 
+		   "&oauth_signature_method=" + oauth_signature_method + 
+		   "&oauth_timestamp=" + oauth_timestamp +
+		   "&oauth_version=" + oauth_version +
+		   "&oauth_signature=" + encodeURIComponent(oauth_signature);
+   };
+   
+   WeiboUtil.getAccessTokenURL = function(oauth_token, oauth_verifier, oauth_token_secret) {
+	   var oauth_consumer_key = appKey,
+	   consumerSecret = secret,
+	   oauth_signature_method = "HMAC-SHA1",
+	   oauth_timestamp = OAuth.timestamp(),
+	   oauth_nonce = OAuth.nonce(32),
+	   oauth_version = "1.0",
+	   method = "GET",
+	   action = "http://api.t.sina.com.cn/oauth/access_token",
+	   parameters = 
+	   {
+		   oauth_consumer_key: oauth_consumer_key,
+		   oauth_nonce: oauth_nonce,
+		   oauth_timestamp: oauth_timestamp,
+		   oauth_token: oauth_token,
+		   oauth_signature_method: oauth_signature_method,
+		   oauth_verifier: oauth_verifier,
+		   oauth_version: oauth_version
+	   },
+	   baseString = OAuth.SignatureMethod.getBaseString({
+		   method: method, 
+		   action: action, 
+		   parameters: parameters
+	   }),
+	   signer = OAuth.SignatureMethod.newMethod(
+			   oauth_signature_method, 
+			   {consumerSecret: consumerSecret, tokenSecret: oauth_token_secret}
+	   ),
+	   oauth_signature = signer.getSignature(baseString);
+	   
+	   return action +
+	   "?oauth_consumer_key=" + oauth_consumer_key + 
+	   "&oauth_token=" + oauth_token + 
+	   "&oauth_nonce=" + oauth_nonce + 
+	   "&oauth_signature_method=" + oauth_signature_method + 
+	   "&oauth_timestamp=" + oauth_timestamp +
+	   "&oauth_version=" + oauth_version +
+	   "&oauth_verifier=" + oauth_verifier +
+	   "&oauth_signature=" + encodeURIComponent(oauth_signature);
+   };
+   
+   WeiboUtil.getAuthorizeURL = function(oauthToken, userId, passwd) {
+	   return "http://api.t.sina.com.cn/oauth/authorize?oauth_token=" + 
+	   oauthToken + "&oauth_callback=json&userId=" + userId + 
+	   "&passwd=" + passwd;
    };
    
    WeiboUtil.getSource = function (source) {

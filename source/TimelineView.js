@@ -144,6 +144,10 @@ enyo.kind({
     }],
     getTimeline: function(inSender, inIndex)
     {
+    	if (!this.owner.timeline)
+		{
+    		return;
+		}
         var t = this.owner.timeline[inIndex];
         
         if (t) 
