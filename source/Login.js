@@ -103,14 +103,12 @@ enyo.kind
     	this.$.failureText.setContent(userId + "|" +
     			accessToken + "|" + accessTokenSecret);
     	
-    	var userInfo = "[{\"userId\":\"" + userId + "\",\"accessToken\":\"" + 
-    				   accessToken + "\",\"accessTokenSecret\":\"" +
-    				   accessTokenSecret + "\"}]";
+    	WeiboUtil.setUserInfo(userId, accessToken, accessTokenSecret);
     	
-    	localStorage.setItem("userInfo", userInfo);
+    	this.doLoggedIn();
     },
     accessFailure: function()
     {
     	this.$.failureText.setContent("Access failed");
-    },
+    }
 });

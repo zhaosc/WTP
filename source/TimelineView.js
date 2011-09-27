@@ -4,6 +4,35 @@ enyo.kind({
     layoutKind: enyo.VFlexLayout,
     components: 
     [{
+        kind: "WebService", 
+        name: "grabTimeline", 
+        onSuccess: "grabTimelineSuccess",
+        onFailure: "grabTimelineFailure"
+    },{
+        kind: "WebService", 
+        name: "grabCounts", 
+        onSuccess: "grabCountsSuccess",
+        onFailure: "grabCountsFailure"
+    },{
+        kind: "Popup",
+        name: "timelineFailurePopup",
+        components:
+        [{
+            style: "font-size: 1.1em; text-align: center;",
+            content: "Trouble getting feed"
+        },{
+            style: "font-size: 0.8em; text-align: justify;",
+            width: "320px",
+            components:
+            [{
+                name: "timelineFailureText"
+            }]
+        },{
+            kind: enyo.Button,
+            caption: "OK",
+            onclick: "closeTimelineFailurePopup"
+        }]
+    },{
         kind: enyo.Header,
         className: "new_timeline",
         layoutKind: enyo.HFlexLayout,
@@ -142,13 +171,50 @@ enyo.kind({
             flex: 1
         }]
     }],
+    grabTimelineSuccess: function(inSender, inResponse, inRequest)
+    {
+        this.timeline = inResponse;
+        
+        var ids = "";
+        for (var i = 0; i < inResponse.length; i++)
+        {
+        	ids += inResponse[i].id + ",";
+        	
+        	if (inResponse[i].retweeted_status)
+    		{
+        		ids += inResponse[i].retweeted_status.id + ",";
+    		}
+        }
+        
+        ids = ids.substring(0, ids.length - 1);
+        
+        var url = WeiboUtil.getCountsURL(ids);
+        this.$.grabCounts.setUrl(url);
+        this.$.grabCounts.call();
+    },
+    grabTimelineFailure: function(inSender, inResponse, inRequest)
+    {
+        this.$.timelineFailurePopup.openAtCenter();
+        this.$.timelineFailureText.setContent(inResponse);
+    },
+    grabCountsSuccess: function(inSender, inResponse, inRequest)
+    {
+    	this.counts = inResponse;
+    	this.$.timeline.render();
+    },
+    grabCountsFailure: function(inSender, inResponse, inRequest)
+    {
+    	this.$.timelineFailurePopup.openAtCenter();
+    	this.$.timelineFailureText.setContent(inResponse);
+    },
     getTimeline: function(inSender, inIndex)
     {
-    	if (!this.owner.timeline)
+    	if (!this.timeline)
 		{
     		return;
 		}
-        var t = this.owner.timeline[inIndex];
+    	
+        var t = this.timeline[inIndex];
         
         if (t) 
         {
@@ -160,13 +226,13 @@ enyo.kind({
             
             var c = this.getCounts(t.id);
             
-            if (parseInt(c.comments) > 0)
+            if (c.comments != undefined && parseInt(c.comments) > 0)
         	{
             	this.$.comments.setContent(this.$.comments.getContent() + 
             							   "(" + c.comments + ")");
         	}
             
-            if (parseInt(c.rt) > 0)
+            if (c.rt != undefined && parseInt(c.rt) > 0)
             {
             	this.$.rt.setContent(this.$.rt.getContent() + 
             						 "(" + c.rt	 + ")");
@@ -181,13 +247,13 @@ enyo.kind({
                 
                 var c = this.getCounts(t.retweeted_status.id);
                 
-                if (parseInt(c.comments) > 0)
+                if (c.comments != undefined && parseInt(c.comments) > 0)
             	{
                 	this.$.retweetedComments.setContent(this.$.retweetedComments.getContent() + 
                 							   "(" + c.comments + ")");
             	}
                 
-                if (parseInt(c.rt) > 0)
+                if (c.rt != undefined && parseInt(c.rt) > 0)
                 {
                 	this.$.retweetedRt.setContent(this.$.retweetedRt.getContent() + 
                 						 "(" + c.rt	 + ")");
@@ -203,11 +269,11 @@ enyo.kind({
     },
     getCounts: function(id)
     {
-    	for (var i = 0; i < this.owner.counts.length; i++)
+    	for (var i = 0; i < this.counts.length; i++)
 		{
-    		if (this.owner.counts[i].id == id)
+    		if (this.counts[i].id == id)
 			{
-    			return this.owner.counts[i];
+    			return this.counts[i];
 			}
 		}
     },
@@ -215,5 +281,23 @@ enyo.kind({
     {
     	var length = 139 - this.$.newTimelineInput.value.length;
     	this.$.charactersCount.setContent(length + " left");
+    },
+    refresh: function(type)
+    {
+    	this.timeline = [];
+        this.counts = [];
+        
+        var url
+        if (type == "friendsTimeline")
+    	{
+        	url = WeiboUtil.getFriendsTimelineURL();
+    	}
+        else if (type == "mentions")
+    	{
+        	url = WeiboUtil.getMentionsURL();
+    	}
+        
+        this.$.grabTimeline.setUrl(url);
+        this.$.grabTimeline.call();
     }
 });

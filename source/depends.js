@@ -5,5 +5,6 @@ enyo.depends(
     "MainView.js",
     "Comments.js",
     "Login.js",
+    "Splash.js",
     "WeiboUtil.js"
 );

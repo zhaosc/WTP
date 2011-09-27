@@ -2,6 +2,11 @@ enyo.kind({
 	name: "WeiboTablet.Sidebar",
 	kind: enyo.SlidingView,
 	layoutKind: enyo.VFlexLayout,
+	events:
+	{
+		"onHomeTap": "",
+		"onMentionsTap": ""
+	},
 	components: 
 	[{
 		kind: enyo.Header,
@@ -30,6 +35,7 @@ enyo.kind({
 			}]
 		},{
 			kind: enyo.Item,
+			name: "mentions",
 			layoutKind: enyo.HFlexLayout,
 			className: "sidebar_item",
 			onclick: "onSidebarItemTap",
@@ -92,5 +98,14 @@ enyo.kind({
 		}
 		
 		inSender.setState("down", true);
+		
+		if (inSender.name == "home")
+		{
+			this.doHomeTap();
+		}
+		else if (inSender.name == "mentions")
+		{
+			this.doMentionsTap();
+		}
 	}
 });
