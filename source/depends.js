@@ -3,7 +3,8 @@ enyo.depends(
 	"Sidebar.js",
 	"TimelineView.js",
     "MainView.js",
-    "Comments.js",
+    "CommentsView.js",
+    "StatusesView.js",
     "Login.js",
     "Splash.js",
     "WeiboUtil.js"

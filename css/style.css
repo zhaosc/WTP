@@ -35,7 +35,7 @@ body {
 /*Timeline items*/
 .timeline {
     background: #fff;
-    padding: 15px;
+    padding: 15px 30px 15px 20px;
     border-bottom: 1px solid #ddd;
 }
 
@@ -57,6 +57,11 @@ body {
 
 .avatar {
 	border-radius: 3px;
+}
+
+.thumbnail_pic {
+	border-radius: 3px;
+	padding: 5px 20px 0 0;
 }
 
 .created_at {
@@ -138,4 +143,5 @@ body {
 
 .sidebar_empty_last_item {
 	border-top: 1px solid #fff;
+	border-bottom: none;
 }

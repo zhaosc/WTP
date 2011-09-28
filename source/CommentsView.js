@@ -1,7 +1,6 @@
 enyo.kind({
-	name: "WeiboTablet.Comments",
-	kind: enyo.SlidingView,
-	layoutKind: enyo.VFlexLayout,
+	name: "WeiboTablet.CommentsView",
+	kind: enyo.VFlexBox,
 	components: 
 	[{
 		kind: enyo.Header,
@@ -12,7 +11,8 @@ enyo.kind({
 			flex: 1,
 			components:
 			[{
-			
+				name: "summary",
+				content: ""
 			}]
 			
 		}]
@@ -23,14 +23,9 @@ enyo.kind({
 		[{
 		
 		}]
-	},{
-		kind: enyo.Toolbar,
-		pack: "justify",
-		components:
-		[{
-			kind: enyo.GrabButton
-		},{
-			flex: 1
-		}]
-	}]
+	}],
+	refresh: function(timeline)
+	{
+		this.$.summary.setContent(timeline.text);
+	}
 });

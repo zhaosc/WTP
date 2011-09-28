@@ -20,21 +20,24 @@ enyo.kind
     		kind: enyo.VFlexBox,
     	    components: 
     	    [{
-		        kind: "SlidingPane",
+		        kind: enyo.SlidingPane,
 		        flex: 1,
-		        multiViewMinWidth: 480,
+		        //multiViewMinWidth: 480,
 		        name: "mainSlidingPane",
 		        components:
 		        [{
 		            name: "sidebarPane",
 		            kind: "WeiboTablet.Sidebar",
-		            width: "320px",
+		            width: "240px",
+		            peekWidth: 0,
 		            onHomeTap: "onHomeTap",
-		            onMentionsTap: "onMentionsTap"
+		            onMentionsTap: "onMentionsTap",
+		            onFavoritesTap: "onFavoritesTap"
 		        },{
-		            name: "timelineView",
+		            name: "statusesView",
 		            flex: 1,
-		            kind: "WeiboTablet.TimelineView"
+		            kind: "WeiboTablet.StatusesView",
+		            onTimelineTap: "onTimelineTap"
 		        }]
 		    }]
     	}]
@@ -59,14 +62,22 @@ enyo.kind
     onLoggedIn: function()
     {
     	this.$.pane.selectViewByName("main");
-    	this.$.timelineView.refresh("friendsTimeline");
+    	this.$.statusesView.refresh("friendsTimeline");
     },
     onHomeTap: function()
     {
-    	this.$.timelineView.refresh("friendsTimeline");
+    	this.$.statusesView.refresh("friendsTimeline");
     },
     onMentionsTap: function()
     {
-    	this.$.timelineView.refresh("mentions");
+    	this.$.statusesView.refresh("mentions");
     },
+    onFavoritesTap: function()
+    {
+    	this.$.statusesView.refresh("favorites");
+    },
+    onTimelineTap: function()
+    {
+    	this.$.mainSlidingPane.selectView(this.$.statusesView);
+    }
 });

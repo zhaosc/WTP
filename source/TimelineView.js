@@ -2,37 +2,12 @@ enyo.kind({
     name: "WeiboTablet.TimelineView",
     kind: enyo.SlidingView,
     layoutKind: enyo.VFlexLayout,
+    events:
+	{
+    	"onTimelineTap": ""
+	},
     components: 
     [{
-        kind: "WebService", 
-        name: "grabTimeline", 
-        onSuccess: "grabTimelineSuccess",
-        onFailure: "grabTimelineFailure"
-    },{
-        kind: "WebService", 
-        name: "grabCounts", 
-        onSuccess: "grabCountsSuccess",
-        onFailure: "grabCountsFailure"
-    },{
-        kind: "Popup",
-        name: "timelineFailurePopup",
-        components:
-        [{
-            style: "font-size: 1.1em; text-align: center;",
-            content: "Trouble getting feed"
-        },{
-            style: "font-size: 0.8em; text-align: justify;",
-            width: "320px",
-            components:
-            [{
-                name: "timelineFailureText"
-            }]
-        },{
-            kind: enyo.Button,
-            caption: "OK",
-            onclick: "closeTimelineFailurePopup"
-        }]
-    },{
         kind: enyo.Header,
         className: "new_timeline",
         layoutKind: enyo.HFlexLayout,
@@ -67,6 +42,7 @@ enyo.kind({
                 layoutKind: enyo.HFlexLayout,
                 className: "timeline",
                 tapHighlight: true,
+                onclick: "timelineTapped",
                 components:
                 [{
                     kind: enyo.Image, 
@@ -83,8 +59,17 @@ enyo.kind({
                         className: "timeline_username", 
                         content: ""
                     },{
-                        name: "text",
-                        content: ""
+                    	kind: enyo.HFlexBox,
+                    	components:
+                		[{
+                			kind: enyo.Image, 
+                            name: "thumbnailPic",
+                            className: "thumbnail_pic"
+                		},{
+                			name: "text",
+                            content: "",
+                            flex: 1
+                		}]
                     },{
                         kind: enyo.VFlexBox,
                         name: "retweetedTimeline",
@@ -95,9 +80,18 @@ enyo.kind({
                             className: "timeline_username_retweeted",
                             content: ""
                         },{
-                            name: "retweetedText",
-                            className: "timeline_text_retweeted",
-                            content: ""
+                        	kind: enyo.HFlexBox,
+                        	components:
+                    		[{
+                    			kind: enyo.Image, 
+                                name: "retweetedThumbnailPic",
+                                className: "thumbnail_pic"
+                    		},{
+	                            name: "retweetedText",
+	                            className: "timeline_text_retweeted",
+	                            content: "",
+	                            flex: 1
+                    		}]
                         },{
                             kind: enyo.HFlexBox,
                             components:
@@ -161,52 +155,7 @@ enyo.kind({
                 }]
             }]
         }]
-    },{
-        kind: enyo.Toolbar,
-        pack: "justify",
-        components:
-        [{
-            kind: enyo.GrabButton
-        },{
-            flex: 1
-        }]
     }],
-    grabTimelineSuccess: function(inSender, inResponse, inRequest)
-    {
-        this.timeline = inResponse;
-        
-        var ids = "";
-        for (var i = 0; i < inResponse.length; i++)
-        {
-        	ids += inResponse[i].id + ",";
-        	
-        	if (inResponse[i].retweeted_status)
-    		{
-        		ids += inResponse[i].retweeted_status.id + ",";
-    		}
-        }
-        
-        ids = ids.substring(0, ids.length - 1);
-        
-        var url = WeiboUtil.getCountsURL(ids);
-        this.$.grabCounts.setUrl(url);
-        this.$.grabCounts.call();
-    },
-    grabTimelineFailure: function(inSender, inResponse, inRequest)
-    {
-        this.$.timelineFailurePopup.openAtCenter();
-        this.$.timelineFailureText.setContent(inResponse);
-    },
-    grabCountsSuccess: function(inSender, inResponse, inRequest)
-    {
-    	this.counts = inResponse;
-    	this.$.timeline.render();
-    },
-    grabCountsFailure: function(inSender, inResponse, inRequest)
-    {
-    	this.$.timelineFailurePopup.openAtCenter();
-    	this.$.timelineFailureText.setContent(inResponse);
-    },
     getTimeline: function(inSender, inIndex)
     {
     	if (!this.timeline)
@@ -223,6 +172,15 @@ enyo.kind({
             this.$.profileImage.setSrc(t.user.profile_image_url);
             this.$.createdAt.setContent(WeiboUtil.toShortDate(t.created_at));
             this.$.source.setContent(WeiboUtil.getSource(t.source));
+            
+            if (t.thumbnail_pic)
+        	{
+            	this.$.thumbnailPic.setSrc(t.thumbnail_pic);
+        	}
+            else
+        	{
+            	this.$.thumbnailPic.hide();
+        	}
             
             var c = this.getCounts(t.id);
             
@@ -245,19 +203,31 @@ enyo.kind({
                 this.$.retweetedCreatedAt.setContent(WeiboUtil.toShortDate(t.retweeted_status.created_at));
                 this.$.retweetedSource.setContent(WeiboUtil.getSource(t.retweeted_status.source));
                 
-                var c = this.getCounts(t.retweeted_status.id);
-                
-                if (c.comments != undefined && parseInt(c.comments) > 0)
+                if (t.retweeted_status.thumbnail_pic)
             	{
-                	this.$.retweetedComments.setContent(this.$.retweetedComments.getContent() + 
-                							   "(" + c.comments + ")");
+                	this.$.retweetedThumbnailPic.setSrc(t.retweeted_status.thumbnail_pic);
+            	}
+                else
+            	{
+                	this.$.retweetedThumbnailPic.hide();
             	}
                 
-                if (c.rt != undefined && parseInt(c.rt) > 0)
-                {
-                	this.$.retweetedRt.setContent(this.$.retweetedRt.getContent() + 
-                						 "(" + c.rt	 + ")");
-                }
+                var c = this.getCounts(t.retweeted_status.id);
+                
+                if (c)
+            	{
+                	if (c.comments != undefined && parseInt(c.comments) > 0)
+                	{
+                		this.$.retweetedComments.setContent(this.$.retweetedComments.getContent() + 
+                				"(" + c.comments + ")");
+                	}
+
+                	if (c.rt != undefined && parseInt(c.rt) > 0)
+                	{
+                		this.$.retweetedRt.setContent(this.$.retweetedRt.getContent() + 
+                				"(" + c.rt	 + ")");
+                	}
+            	}
             }
             else
             {
@@ -282,22 +252,15 @@ enyo.kind({
     	var length = 139 - this.$.newTimelineInput.value.length;
     	this.$.charactersCount.setContent(length + " left");
     },
-    refresh: function(type)
+    refresh: function(timeline, counts)
     {
-    	this.timeline = [];
-        this.counts = [];
-        
-        var url
-        if (type == "friendsTimeline")
-    	{
-        	url = WeiboUtil.getFriendsTimelineURL();
-    	}
-        else if (type == "mentions")
-    	{
-        	url = WeiboUtil.getMentionsURL();
-    	}
-        
-        this.$.grabTimeline.setUrl(url);
-        this.$.grabTimeline.call();
+    	this.timeline = timeline;
+    	this.counts = counts;
+    	
+    	this.$.timeline.render();
+    },
+    timelineTapped: function(inSender, inEvent)
+    {
+    	this.doTimelineTap(this.timeline[inEvent.rowIndex]);
     }
 });

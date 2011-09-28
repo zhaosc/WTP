@@ -5,7 +5,8 @@ enyo.kind({
 	events:
 	{
 		"onHomeTap": "",
-		"onMentionsTap": ""
+		"onMentionsTap": "",
+		"onFavoritesTap": ""
 	},
 	components: 
 	[{
@@ -69,6 +70,7 @@ enyo.kind({
 			}]
 		},{
 			kind: enyo.Item,
+			name: "favorites",
 			layoutKind: enyo.HFlexLayout,
 			className: "sidebar_item",
 			onclick: "onSidebarItemTap",
@@ -106,6 +108,10 @@ enyo.kind({
 		else if (inSender.name == "mentions")
 		{
 			this.doMentionsTap();
+		}
+		else if (inSender.name == "favorites")
+		{
+			this.doFavoritesTap();
 		}
 	}
 });

@@ -105,6 +105,46 @@ var WeiboUtil = (function (WeiboUtil) {
 	   "&oauth_signature=" + encodeURIComponent(oauth_signature);
    };
    
+   WeiboUtil.getFavoritesURL = function() {
+	   var oauth_consumer_key = appKey,
+	   consumerSecret = secret,
+	   oauth_signature_method = "HMAC-SHA1",
+	   oauth_timestamp = OAuth.timestamp(),
+	   oauth_nonce = OAuth.nonce(32),
+	   oauth_version = "1.0",
+	   page = 1,
+	   method = "GET",
+	   action = "http://api.t.sina.com.cn/favorites.json",
+	   parameters = 
+	   {
+		   oauth_consumer_key: oauth_consumer_key,
+		   oauth_nonce: oauth_nonce,
+		   oauth_signature_method: oauth_signature_method,
+		   oauth_timestamp: oauth_timestamp,
+		   oauth_token: this.getUserInfo().accessToken,
+		   oauth_version: oauth_version
+	   },
+	   baseString = OAuth.SignatureMethod.getBaseString({
+		   method: method, 
+		   action: action, 
+		   parameters: parameters
+	   }),
+	   signer = OAuth.SignatureMethod.newMethod(
+			   oauth_signature_method, 
+			   {consumerSecret: consumerSecret, tokenSecret: this.getUserInfo().accessTokenSecret}
+	   ),
+	   oauth_signature = signer.getSignature(baseString);
+	   
+	   return action +
+	   "?oauth_consumer_key=" + oauth_consumer_key + 
+	   "&oauth_token=" + this.getUserInfo().accessToken + 
+	   "&oauth_nonce=" + oauth_nonce + 
+	   "&oauth_signature_method=" + oauth_signature_method + 
+	   "&oauth_timestamp=" + oauth_timestamp +
+	   "&oauth_version=" + oauth_version +
+	   "&oauth_signature=" + encodeURIComponent(oauth_signature);
+   };
+   
    WeiboUtil.getCountsURL = function(ids) {
 	   var oauth_consumer_key = appKey,
 	   consumerSecret = secret,
