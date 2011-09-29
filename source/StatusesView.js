@@ -4,7 +4,8 @@ enyo.kind({
     layoutKind: enyo.VFlexLayout,
     events:
 	{
-    	"onTimelineTap": ""
+    	"onTimelineTap": "",
+    	"onDataGrabbed": ""
 	},
     components: 
     [{
@@ -89,6 +90,9 @@ enyo.kind({
     grabCountsSuccess: function(inSender, inResponse, inRequest)
     {
     	this.counts = inResponse;
+    	
+    	this.doDataGrabbed();
+    	
     	this.$.timelineView.refresh(this.timeline, this.counts);
     },
     grabCountsFailure: function(inSender, inResponse, inRequest)
@@ -98,6 +102,8 @@ enyo.kind({
     },
     refresh: function(type)
     {
+    	this.owner.$.splash.showSpinner();
+    	
         var url;
         if (type == "friendsTimeline")
     	{

@@ -37,14 +37,15 @@ enyo.kind
 		            name: "statusesView",
 		            flex: 1,
 		            kind: "WeiboTablet.StatusesView",
-		            onTimelineTap: "onTimelineTap"
+		            onTimelineTap: "timelineTapped",
+		            onDataGrabbed: "dataGrabbed"
 		        }]
 		    }]
     	}]
     }],
     ready: function() 
     {
-    	setTimeout(this.checkLoggedIn(), 1500);
+    	setTimeout("this.enyo.$.mainView.checkLoggedIn()", 1500);
     },
     checkLoggedIn: function()
     {
@@ -61,7 +62,6 @@ enyo.kind
     },
     onLoggedIn: function()
     {
-    	this.$.pane.selectViewByName("main");
     	this.$.statusesView.refresh("friendsTimeline");
     },
     onHomeTap: function()
@@ -76,8 +76,12 @@ enyo.kind
     {
     	this.$.statusesView.refresh("favorites");
     },
-    onTimelineTap: function()
+    onTimelineTapped: function()
     {
     	this.$.mainSlidingPane.selectView(this.$.statusesView);
+    },
+    dataGrabbed: function()
+    {
+    	this.$.pane.selectViewByName("main");
     }
 });

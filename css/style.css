@@ -7,6 +7,17 @@ body {
 	color: #999;
 }
 
+/* Splash */
+.splash_title {
+	font-size: 32px;
+	text-align: center;
+}
+
+.splash_spinner {
+	font-size: 12px;
+}
+
+
 /*New timeline*/
 .new_timeline {
 	-webkit-border-image: url("") 1 0;

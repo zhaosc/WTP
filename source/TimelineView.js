@@ -4,7 +4,7 @@ enyo.kind({
     layoutKind: enyo.VFlexLayout,
     events:
 	{
-    	"onTimelineTap": ""
+    	"onTimelineTap": "",
 	},
     components: 
     [{
