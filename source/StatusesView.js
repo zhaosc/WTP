@@ -121,9 +121,9 @@ enyo.kind({
         this.$.grabTimeline.setUrl(url);
         this.$.grabTimeline.call();
     },
-    timelineTapped: function(inSender, inTimeline)
+    timelineTapped: function(inSender, inTimeline, inCounts)
     {
     	this.doTimelineTap();
-    	this.$.commentsView.refresh(inTimeline);
+    	this.$.commentsView.refresh(inTimeline, inCounts);
     }
 });

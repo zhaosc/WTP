@@ -261,6 +261,7 @@ enyo.kind({
     },
     timelineTapped: function(inSender, inEvent)
     {
-    	this.doTimelineTap(this.timeline[inEvent.rowIndex]);
+    	this.doTimelineTap(this.timeline[inEvent.rowIndex],
+    					   this.getCounts(this.timeline[inEvent.rowIndex].id));
     }
 });

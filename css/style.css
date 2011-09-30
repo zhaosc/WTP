@@ -32,7 +32,6 @@ body {
     border-radius: 3px;
     padding: 10px 15px;
     line-height: 160%;
-    margin: 0 12px;
     color: #777;
     font-size: 15px;
 }
@@ -72,7 +71,7 @@ body {
 
 .thumbnail_pic {
 	border-radius: 3px;
-	padding: 5px 20px 0 0;
+	padding: 0 20px 0 0;
 }
 
 .created_at {
@@ -155,4 +154,64 @@ body {
 .sidebar_empty_last_item {
 	border-top: 1px solid #fff;
 	border-bottom: none;
+}
+
+/* Comments */
+.comments_header {
+	-webkit-border-image: url("") 1 0;
+	background: #f0f0f0;
+	border-bottom: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	font-size: 14px;
+	color: #777;
+	line-height: 170%;
+	padding-top: 12px;
+}
+
+.comments_username {
+    text-overflow: ellipsis; 
+    overflow: hidden;
+    white-space: nowrap; 
+    font-weight: bold; 
+    color: #ED8C80;
+    font-size: 15px;
+    padding-right: 12px;
+}
+
+.comments_avatar {
+	border-radius: 3px;
+	width: 40px;
+	padding: 0 12px;
+}
+
+.comments_button_toolbar {
+	background: #f9f9f9;
+	margin-top: 12px;
+	font-size: 13px;
+	border-top: 1px solid #ddd;
+}
+
+.comments_button {
+	padding: 10px 0;
+	text-align: center;
+	background: #fff;
+} 
+
+.comments_button_selected {
+	background: #f9f9f9;
+}
+
+.input_toolbar {
+	background: #f9f9f9;
+	padding: 12px;
+	border-bottom: 1px solid #ddd;
+}
+
+.comment {
+	font-size: 14px;
+	color: #777;
+	line-height: 170%;
+	background: #ffffff;
+	padding: 12px 0;
+	border-bottom: 1px solid #ddd;
 }

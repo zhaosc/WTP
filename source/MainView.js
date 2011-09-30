@@ -76,7 +76,7 @@ enyo.kind
     {
     	this.$.statusesView.refresh("favorites");
     },
-    onTimelineTapped: function()
+    timelineTapped: function()
     {
     	this.$.mainSlidingPane.selectView(this.$.statusesView);
     },
