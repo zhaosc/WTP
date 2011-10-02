@@ -3,6 +3,26 @@ body {
 	line-height: 170%;
 }
 
+a {
+	color: #71B1B7;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none; 
+}
+
 .grey_text {
 	color: #999;
 }

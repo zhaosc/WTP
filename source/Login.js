@@ -24,12 +24,12 @@ enyo.kind
         onFailure: "accessFailure"
     },{
 		name: "failureText",
-		content: "µÇÂ½Ê§°Ü"
+		content: "ç™»é™†å¤±è´¥"
     },{
     	kind: enyo.HFlexBox,
     	components:
 		[{
-    		content: "ÓÃ»§Ãû"
+    		content: "ç”¨æˆ·å"
 		},{
 			name: "userId",
 			kind: enyo.Input
@@ -38,7 +38,7 @@ enyo.kind
     	kind: enyo.HFlexBox,
     	components:
 		[{
-    		content: "ÃÜÂë"
+    		content: "å¯†ç "
 		},{
 			name: "passwd",
 			kind: enyo.PasswordInput
@@ -49,14 +49,14 @@ enyo.kind
 		[{
 			name: "loginButton", 
 			kind: enyo.Button,
-			content: "µÇÂ½", 
+			content: "ç™»é™†", 
 			onclick: "loginClick"
 		},{
 			width: "10px"
 		},{
 			name: "cancelButton", 
 			kind: enyo.Button,
-			content: "È¡Ïû", 
+			content: "å–æ¶ˆ", 
 			onclick: "cancelClick"
 		}]
 	}],

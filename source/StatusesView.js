@@ -5,17 +5,20 @@ enyo.kind({
     events:
 	{
     	"onTimelineTap": "",
-    	"onDataGrabbed": ""
+    	"onDataGrabbed": "",
+    	"onLinkClick": "doLinkClick"
 	},
     components: 
     [{
         kind: "WebService", 
         name: "grabTimeline", 
+        method: "POST",
         onSuccess: "grabTimelineSuccess",
         onFailure: "grabTimelineFailure"
     },{
         kind: "WebService", 
         name: "grabCounts", 
+        method: "POST",
         onSuccess: "grabCountsSuccess",
         onFailure: "grabCountsFailure"
     },{
@@ -45,7 +48,8 @@ enyo.kind({
 			name: "timelineView",
 			kind: "WeiboTablet.TimelineView",
 			width: "784px",
-			onTimelineTap: "timelineTapped"
+			onTimelineTap: "timelineTapped",
+			onLinkClick: "doLinkClick"
 	    },{
         	name: "commentsView",
         	kind: "WeiboTablet.CommentsView",
@@ -79,7 +83,8 @@ enyo.kind({
         ids = ids.substring(0, ids.length - 1);
         
         var url = WeiboUtil.getCountsURL(ids);
-        this.$.grabCounts.setUrl(url);
+        this.$.grabCounts.setUrl(url.url);
+        this.$.grabCounts.setHeaders(url.headers);
         this.$.grabCounts.call();
     },
     grabTimelineFailure: function(inSender, inResponse, inRequest)
@@ -118,7 +123,8 @@ enyo.kind({
         	url = WeiboUtil.getFavoritesURL();
         }
         
-        this.$.grabTimeline.setUrl(url);
+        this.$.grabTimeline.setUrl(url.url);
+        this.$.grabTimeline.setHeaders(url.headers);
         this.$.grabTimeline.call();
     },
     timelineTapped: function(inSender, inTimeline, inCounts)

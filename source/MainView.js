@@ -17,29 +17,54 @@ enyo.kind
 			onLoggedIn: "onLoggedIn"
 		},{
 			name: "main",
+			flex: 1,
     		kind: enyo.VFlexBox,
     	    components: 
     	    [{
 		        kind: enyo.SlidingPane,
 		        flex: 1,
-		        //multiViewMinWidth: 480,
 		        name: "mainSlidingPane",
 		        components:
-		        [{
-		            name: "sidebarPane",
-		            kind: "WeiboTablet.Sidebar",
-		            width: "240px",
-		            peekWidth: 0,
-		            onHomeTap: "onHomeTap",
-		            onMentionsTap: "onMentionsTap",
-		            onFavoritesTap: "onFavoritesTap"
-		        },{
-		            name: "statusesView",
-		            flex: 1,
-		            kind: "WeiboTablet.StatusesView",
-		            onTimelineTap: "timelineTapped",
-		            onDataGrabbed: "dataGrabbed"
-		        }]
+	        	[{
+	        		kind: enyo.SlidingView,
+	        		peekWidth:0,
+		            minWidth: 0,
+		            width: "1264px",
+	        	    components:
+        	    	[{
+        	    		kind: enyo.VFlexBox,
+        	    		flex: 1,
+        	    	    components: 
+        	    	    [{
+	        	    		kind: enyo.SlidingPane,
+	        	    		flex: 1,
+	        	    		name: "statuesesSlidingPane",
+	    			        components:
+	    			        [{
+	    			            name: "sidebarPane",
+	    			            kind: "WeiboTablet.Sidebar",
+	    			            width: "240px",
+	    			            peekWidth: 0,
+	    			            onHomeTap: "onHomeTap",
+	    			            onMentionsTap: "onMentionsTap",
+	    			            onFavoritesTap: "onFavoritesTap"
+	    			        },{
+	    			            name: "statusesView",
+	    			            width: "1024px",
+	    			            peekWidth:0,
+	    			            kind: "WeiboTablet.StatusesView",
+	    			            onTimelineTap: "timelineTapped",
+	    			            onDataGrabbed: "dataGrabbed",
+	    			            onLinkClick: "linkClicked"
+	    			        }]
+        	    	    }]
+        	    	}]
+	        	},{
+		        	name: "userView",
+		            peekWidth:0,
+		            minWidth: 0,
+		            kind: "WeiboTablet.UserView"
+	        	}]
 		    }]
     	}]
     }],
@@ -78,10 +103,19 @@ enyo.kind
     },
     timelineTapped: function()
     {
-    	this.$.mainSlidingPane.selectView(this.$.statusesView);
+    	this.$.statuesesSlidingPane.selectView(this.$.statusesView);
     },
     dataGrabbed: function()
     {
     	this.$.pane.selectViewByName("main");
+    },
+    linkClicked: function(inSender, inUrl)
+    {
+    	if (inUrl.indexOf("@") != -1)
+		{
+    		var username = inUrl.substring(inUrl.indexOf("@") + 1);
+    		this.$.userView.refresh(username);
+    		this.$.mainSlidingPane.selectView(this.$.userView);
+		}
     }
 });

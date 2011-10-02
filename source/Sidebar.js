@@ -32,7 +32,7 @@ enyo.kind({
 			[{
 				content: "icon"
 			},{
-				content: "首页"
+				content: "棣栭〉"
 			}]
 		},{
 			kind: enyo.Item,
@@ -44,7 +44,7 @@ enyo.kind({
 			[{
 				content: "icon"
 			},{
-				content: "提到我的"
+				content: "鎻愬埌鎴戠殑"
 			}]
 		},{
 			kind: enyo.Item,
@@ -55,7 +55,7 @@ enyo.kind({
 			[{
 				content: "icon"
 			},{
-				content: "评论"
+				content: "杞彂"
 			}]
 		},{
 			kind: enyo.Item,
@@ -66,7 +66,7 @@ enyo.kind({
 			[{
 				content: "icon"
 			},{
-				content: "私信"
+				content: "璇勮"
 			}]
 		},{
 			kind: enyo.Item,
@@ -78,7 +78,7 @@ enyo.kind({
 			[{
 				content: "icon"
 			},{
-				content: "收藏"
+				content: "鏀惰棌"
 			}]
 		},{
 			kind: enyo.Item,

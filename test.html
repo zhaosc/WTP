@@ -7,80 +7,17 @@
 </head>
 <body>
 <script type="text/javascript">
-	var method = "POST",
-		action = "http://api.t.sina.com.cn/oauth/request_token",
-		parameters = 
-			{oauth_callback: "http://localhost:3005/the_dance/process_callback?service_provider_id=11",
-	 		 oauth_consumer_key: "GDdmIQH6jhtmLUypg82g",
-			 oauth_nonce: "QP70eNmVz8jvdPevU3oJD2AfF7R7odC2XJcn4XlZJqk",
-			 oauth_signature_method: "HMAC-SHA1",
-			 oauth_timestamp: "1272323042",
-			 oauth_version: "1.0"};
-	var actual = OAuth.SignatureMethod.getBaseString({method: method, action: action, parameters: parameters});
-	var expected = "POST&http%3A%2F%2Fapi.t.sina.com.cn%2Foauth%2Frequest_token&oauth_callback%3Dhttp%253A%252F%252Flocalhost%253A3005%252Fthe_dance%252Fprocess_callback%253Fservice_provider_id%253D11%26oauth_consumer_key%3DGDdmIQH6jhtmLUypg82g%26oauth_nonce%3DQP70eNmVz8jvdPevU3oJD2AfF7R7odC2XJcn4XlZJqk%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1272323042%26oauth_version%3D1.0";
-	
-	if (expected == actual) {
-		alert("Base string test: successful");
-	} else {
-        alert("Base string test: \n" + actual + " (actual)\n" + expected + " (expected)");
-    }
-    
-    var baseString = "POST&https%3A%2F%2Fapi.twitter.com%2Foauth%2Frequest_token&oauth_callback%3Dhttp%253A%252F%252Flocalhost%253A3005%252Fthe_dance%252Fprocess_callback%253Fservice_provider_id%253D11%26oauth_consumer_key%3DGDdmIQH6jhtmLUypg82g%26oauth_nonce%3DQP70eNmVz8jvdPevU3oJD2AfF7R7odC2XJcn4XlZJqk%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1272323042%26oauth_version%3D1.0";
-    var key = "MCD8BKwGdgPHvAuvgvz4EQpqDAtx89grbuNMRd7Eh98";
-    var signer = OAuth.SignatureMethod.newMethod("HMAC-SHA1", 
-    											 {consumerSecret: key, tokenSecret: null});
-    actual = signer.getSignature(baseString);
-    //actual = b64_hmac_sha1(key, baseString);
-    expected = "8wUi7m5HFQy76nowoCThusfgB+Q=";
-    if (expected == actual) {
-		alert("Signature test: successful");
-	} else {
-        alert("Signature test: \n" + actual + " (actual)\n" + expected + " (expected)");
-    }
-    
-    
-    
-    var nonce = OAuth.nonce(32);
-    
-    var oauth_consumer_key = "61780054",
-    consumerSecret = "d443b764c8b523e6e6c6ad254f6e369f",
-    oauth_signature_method = "HMAC-SHA1",
-    oauth_timestamp = OAuth.timestamp(),
-    oauth_nonce = OAuth.nonce(7),
-    oauth_version = "1.0",
-    //oauth_callback = "http://www.baidu.com",
-    method = "GET",
-	action = "http://api.t.sina.com.cn/oauth/request_token",
-	parameters = 
-	{
-		//oauth_callback: oauth_callback,
-	 	oauth_consumer_key: oauth_consumer_key,
-		oauth_nonce: oauth_nonce,
-		oauth_signature_method: oauth_signature_method,
-		oauth_timestamp: oauth_timestamp,
-		oauth_version: oauth_version
-	},
-	baseString = OAuth.SignatureMethod.getBaseString({
-		method: method, 
-		action: action, 
-		parameters: parameters
-	}),
-    signer = OAuth.SignatureMethod.newMethod(
-    	oauth_signature_method, 
-    	{consumerSecret: consumerSecret, tokenSecret: null}
-	),
-    oauth_signature = signer.getSignature(baseString);
-    //alert(baseString);
-    //alert(oauth_signature + " " + encodeURIComponent(oauth_signature));
-    
-    window.location = action +
-    	//"?oauth_callback=" + encodeURIComponent(oauth_callback) +
-    	"?oauth_consumer_key=" + oauth_consumer_key + 
-    	"&oauth_nonce=" + oauth_nonce + 
-    	"&oauth_signature_method=" + oauth_signature_method + 
-    	"&oauth_timestamp=" + oauth_timestamp +
-    	"&oauth_version=" + oauth_version +
-    	"&oauth_signature=" + encodeURIComponent(oauth_signature)
+	var text = "@ss中文a。@suu #asd#,#sadh中文ss#。顺利和科比完成签约。http://t.cn/aDaSXP,http://t.cn/aDaSXa"
+	 var match = [].concat(text.match(/@[\u4e00-\u9fa5\w\-]+/g),
+	 text.match(/#[^#|.]+#/g), text.match(/http:\/\/t.cn\/[\w]{5,6}/gi));	
+   
+   for (i in match)
+   {
+   		text = text.replace(match[i], "<a href=\"\">" + match[i] + "</a>");
+   }
+   
+   alert(encodeURIComponent(encodeURIComponent("测试")) + "\n" + "%3D%25E6%25B5%258B%25E8%25AF%2595");
+   
 </script>
 </body>
 </html>

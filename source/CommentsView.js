@@ -5,22 +5,29 @@ enyo.kind({
 	components:
 	[{
         kind: "WebService", 
+        method: "POST",
         name: "grabComments", 
         onSuccess: "grabCommentsSuccess",
         onFailure: "grabCommentsFailure"
+    },{
+        kind: "WebService", 
+        method: "POST",
+        name: "grabRepostTimeline", 
+        onSuccess: "grabRepostTimelineSuccess",
+        onFailure: "grabRepostTimelineFailure"
     },{
 		kind: enyo.HFlexBox,
 		components:
 		[{
 			kind: enyo.Image, 
-            name: "profileImage",
+            name: "authorProfileImage",
             className: "comments_avatar"
 		},{
 			kind: enyo.VFlexbBox,
 			flex: 1,
 			components:
 			[{
-				name: "username",
+				name: "author",
 				style: "padding-right: 12px;",
 				className: "comments_username"
 			},{
@@ -35,14 +42,16 @@ enyo.kind({
 		className: "comments_button_toolbar",
 		components:
 		[{
-			content: "评论",
+			content: "璇勮",
 			name: "commentsButton",
 			className: "comments_button",
+			onclick: "commentsButtonTapped",
 			flex: 1
 		},{
-			content: "转发",
+			content: "杞彂",
 			name: "rtButton",
 			className: "comments_button",
+			onclick: "rtButtonTapped",
 			flex: 1
 		}]
 	},{
@@ -61,11 +70,11 @@ enyo.kind({
 	},{
 		kind: enyo.Scroller,
 		flex: 1,
-		name: "comments",
+		name: "contents",
 		components:
 		[{
 			kind: enyo.VirtualRepeater,
-            onSetupRow: "getComment",
+            onSetupRow: "setupContent",
             components:
             [{
                 kind: enyo.Item,
@@ -74,17 +83,17 @@ enyo.kind({
 				components:
 				[{
 					kind: enyo.Image, 
-		            name: "commenterProfileImage",
+		            name: "profileImage",
 		            className: "comments_avatar"
 				},{
 					kind: enyo.VFlexbBox,
 					flex: 1,
 					components:
 					[{
-						name: "commenterUsername",
+						name: "username",
 						className: "comments_username"
 					},{
-						name: "comment",
+						name: "content",
 						style: "padding-right: 12px;",
 						content: ""
 					}]
@@ -94,57 +103,122 @@ enyo.kind({
 	}],
 	refresh: function(timeline, counts)
 	{
-		this.$.profileImage.setSrc(timeline.user.profile_image_url);
-		this.$.username.setContent(timeline.user.name);
-		
-		if(timeline.text.length < 45)
+		if (!this.timeline || this.timeline.id != timeline.id)
 		{
-			this.$.summary.setContent(timeline.text);
-		}
-		else
-		{
-			this.$.summary.setContent(timeline.text.substring(0, 45) + "...");
-		}
-		
-		if(counts.comments > 0)
-		{
-			var url = WeiboUtil.getCommentsURL(timeline.id);
-		    
-		    this.$.grabComments.setUrl(url);
-		    this.$.grabComments.call();
-		    
-			this.$.commentsButton.setContent("评论(" + counts.comments + ")");
-		}
-		
-		this.$.commentsButton.addClass("comments_button_selected");
-		
-		if (counts.rt > 0)
-		{
-			this.$.rtButton.setContent("转发(" + counts.rt + ")");
+			this.timeline = timeline;
+			this.counts = counts;
+			this.comments = undefined;
+			this.rt = undefined;
+			this.$.authorProfileImage.setSrc(timeline.user.profile_image_url);
+			this.$.author.setContent(timeline.user.name);
+			
+			if(timeline.text.length < 45)
+			{
+				this.$.summary.setContent(timeline.text);
+			}
+			else
+			{
+				this.$.summary.setContent(timeline.text.substring(0, 45) + "...");
+			}
+			
+			if(counts.comments > 0)
+			{
+				var url = WeiboUtil.getCommentsURL(timeline.id);
+			    
+				this.$.grabComments.setUrl(url.url);
+		        this.$.grabComments.setHeaders(url.headers);
+			    this.$.grabComments.call();
+			    
+				this.$.commentsButton.setContent("璇勮(" + counts.comments + ")");
+			}
+			
+			this.contentType = "comments";
+			this.$.commentsButton.addClass("comments_button_selected");
+			this.$.rtButton.removeClass("comments_button_selected");
+			
+			if (counts.rt > 0)
+			{
+				this.$.rtButton.setContent("杞彂(" + counts.rt + ")");
+			}
 		}
 	},
 	grabCommentsSuccess: function(inSender, inResponse, inRequest)
 	{
 		this.comments = inResponse;
-		this.$.comments.render();
+		this.$.contents.render();
 	},
 	grabCommentsFailure: function()
 	{
 		
 	},
-	getComment: function(inSender, inIndex)
+	grabRepostTimelineSuccess: function(inSender, inResponse, inRequest)
 	{
-		if (this.comments && inIndex < this.comments.length)
+		this.rt = inResponse;
+		this.$.contents.render();
+	},
+	grabRepostTimelineFailure: function()
+	{
+		
+	},
+	setupContent: function(inSender, inIndex)
+	{
+		if (this.contentType)
 		{
-			this.$.comment.setContent(this.comments[inIndex].text);
-			this.$.commenterUsername.setContent(this.comments[inIndex].user.name);
-			this.$.commenterProfileImage.setSrc(this.comments[inIndex].user.profile_image_url);
+			var content;
+			if (this.contentType == "comments" && this.comments && inIndex < this.comments.length)
+			{
+				content = this.comments[inIndex];
+			}
+			else if (this.contentType == "rt" && this.rt && inIndex < this.rt.length)
+			{
+				content = this.rt[inIndex];
+			}
+			else
+			{
+				return false;
+			}
 			
-			return true;
+			if (content)
+			{
+				this.$.content.setContent(content.text);
+				this.$.username.setContent(content.user.name);
+				this.$.profileImage.setSrc(content.user.profile_image_url);
+				
+				return true;
+			}
 		}
 		else
 		{
 			return false;
+		}
+	},
+	commentsButtonTapped: function()
+	{
+		this.contentType = "comments";
+		this.$.commentsButton.addClass("comments_button_selected");
+		this.$.rtButton.removeClass("comments_button_selected");
+		this.$.contents.render();
+	},
+	rtButtonTapped: function()
+	{
+		this.contentType = "rt";
+		this.$.rtButton.addClass("comments_button_selected");
+		this.$.commentsButton.removeClass("comments_button_selected");
+		
+		if(this.counts.rt > 0)
+		{
+			if (this.rt)
+			{
+				this.$.contents.render();
+			}
+			else
+			{
+				var url = WeiboUtil.getRepostTimelineURL(this.timeline.id);
+			    
+				this.$.grabRepostTimeline.setUrl(url.url);
+		        this.$.grabRepostTimeline.setHeaders(url.headers);
+			    this.$.grabRepostTimeline.call();
+			}
 		}
 	}
 });

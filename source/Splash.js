@@ -9,7 +9,7 @@ enyo.kind
 		flex: 1
 	},{
 		className: "splash_title",
-    	content: "新浪微博"
+    	content: "鏂版氮寰崥"
 	},{
 		kind: enyo.HFlexBox,
 		className: "splash_spinner",
@@ -21,7 +21,7 @@ enyo.kind
 			showing: false
 		},{
 			name: "splashText",
-			content: "正在获取...",
+			content: "鑾峰彇淇℃伅...",
 			showing: false
 		}]
 	}],

@@ -5,6 +5,7 @@ enyo.kind({
     events:
 	{
     	"onTimelineTap": "",
+    	"onLinkClick": ""
 	},
     components: 
     [{
@@ -16,7 +17,7 @@ enyo.kind({
         	content: "picture icon"
         },{
             kind: enyo.Input,
-            name: "new_timeline_input",
+            name: "newTimelineInput",
             oninput: "countCharacters",
             hint: "what",
             alwaysLooksFocused: true,
@@ -67,6 +68,8 @@ enyo.kind({
                             className: "thumbnail_pic"
                 		},{
                 			name: "text",
+                			kind: enyo.HtmlContent,
+                			onLinkClick: "linkClicked",
                             content: "",
                             flex: 1
                 		}]
@@ -88,6 +91,8 @@ enyo.kind({
                                 className: "thumbnail_pic"
                     		},{
 	                            name: "retweetedText",
+	                            kind: enyo.HtmlContent,
+	                            onLinkClick: "linkClicked",
 	                            className: "timeline_text_retweeted",
 	                            content: "",
 	                            flex: 1
@@ -109,17 +114,17 @@ enyo.kind({
                             	name: "retweetedRt",
                             	pack: "end",
                             	className: "counts_retweeted grey_text",
-                            	content: "转发"
+                            	content: "杞彂"
                             },{
                             	name: "retweetedAddToFavorite",
                             	pack: "end",
                             	className: "counts_retweeted grey_text",
-                            	content: "收藏"
+                            	content: "鏀惰棌"
                             },{
                             	name: "retweetedComments",
                             	pack: "end",
                             	className: "counts_retweeted grey_text",
-                            	content: "评论"
+                            	content: "璇勮"
                             }]
                         }]
                     },{
@@ -139,17 +144,17 @@ enyo.kind({
                         	name: "rt",
                         	pack: "end",
                         	className: "counts grey_text",
-                        	content: "转发"
+                        	content: "杞彂"
                         },{
                         	name: "addToFavorite",
                         	pack: "end",
                         	className: "counts grey_text",
-                        	content: "收藏"
+                        	content: "鏀惰棌"
                         },{
                         	name: "comments",
                         	pack: "end",
                         	className: "counts grey_text",
-                        	content: "评论"
+                        	content: "璇勮"
                         }]
                     }]
                 }]
@@ -167,7 +172,7 @@ enyo.kind({
         
         if (t) 
         {
-            this.$.text.setContent(t.text);
+            this.$.text.setContent(WeiboUtil.textToHtml(t.text));
             this.$.username.setContent(t.user.name);
             this.$.profileImage.setSrc(t.user.profile_image_url);
             this.$.createdAt.setContent(WeiboUtil.toShortDate(t.created_at));
@@ -198,7 +203,8 @@ enyo.kind({
             
             if (t.retweeted_status)
             {
-                this.$.retweetedText.setContent(t.retweeted_status.text);
+            	this.$.thumbnailPic.hide();
+                this.$.retweetedText.setContent(WeiboUtil.textToHtml(t.retweeted_status.text));
                 this.$.retweetedUsername.setContent(t.retweeted_status.user.name);
                 this.$.retweetedCreatedAt.setContent(WeiboUtil.toShortDate(t.retweeted_status.created_at));
                 this.$.retweetedSource.setContent(WeiboUtil.getSource(t.retweeted_status.source));
@@ -263,5 +269,9 @@ enyo.kind({
     {
     	this.doTimelineTap(this.timeline[inEvent.rowIndex],
     					   this.getCounts(this.timeline[inEvent.rowIndex].id));
+    },
+    linkClicked: function (inSender, inUrl)
+    {
+    	this.doLinkClick(inUrl);
     }
 });
