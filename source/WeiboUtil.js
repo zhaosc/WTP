@@ -9,6 +9,11 @@ var WeiboUtil = (function (WeiboUtil) {
 			   {screen_name: screen_name});
    };
    
+   WeiboUtil.getUserTimelineURL = function(screen_name) {
+	   return getURL("http://api.t.sina.com.cn/statuses/user_timeline.json",
+			   {screen_name: screen_name});
+   };
+   
    WeiboUtil.getFriendsTimelineURL = function() {
 	   return getURL("http://api.t.sina.com.cn/statuses/friends_timeline.json");
    };
@@ -202,7 +207,7 @@ var WeiboUtil = (function (WeiboUtil) {
 	   {
 		   for (var k in p) 
 		   {
-			   if (p.hasOwnProperty(k)) 
+			   if (p.hasOwnProperty(k) && p[k]) 
 			   { 
 				   parameters[k] = p[k];
 			   }

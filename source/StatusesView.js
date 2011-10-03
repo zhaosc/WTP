@@ -45,11 +45,37 @@ enyo.kind({
     	flex: 1,
     	components:
 		[{
-			name: "timelineView",
-			kind: "WeiboTablet.TimelineView",
-			width: "784px",
-			onTimelineTap: "timelineTapped",
-			onLinkClick: "doLinkClick"
+		    kind: enyo.SlidingView,
+		    layoutKind: enyo.VFlexLayout,
+		    components: 
+		    [{
+		        kind: enyo.Header,
+		        className: "new_timeline",
+		        layoutKind: enyo.HFlexLayout,
+		        components:
+		        [{
+		        	content: "picture icon"
+		        },{
+		            kind: enyo.Input,
+		            name: "newTimelineInput",
+		            oninput: "countCharacters",
+		            hint: "what",
+		            alwaysLooksFocused: true,
+		            flex: 1,
+		            inputClassName: "new_timeline_input_inner",
+		            className: "new_timeline_input",
+		            styled: false
+		        },{
+		        	name: "charactersCount",
+		        	content: "140 left"
+		        }]
+		    },{
+		        name: "timelineView",
+				kind: "WeiboTablet.TimelineView",
+				width: "784px",
+				onTimelineTap: "timelineTapped",
+				onLinkClick: "doLinkClick"
+		    }]
 	    },{
         	name: "commentsView",
         	kind: "WeiboTablet.CommentsView",
@@ -131,5 +157,10 @@ enyo.kind({
     {
     	this.doTimelineTap();
     	this.$.commentsView.refresh(inTimeline, inCounts);
+    },
+    countCharacters: function()
+    {
+    	var length = 140 - this.$.newTimelineInput.value.length;
+    	this.$.charactersCount.setContent(length + " left");
     }
 });

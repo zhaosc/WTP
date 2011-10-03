@@ -1,7 +1,8 @@
 enyo.kind({
     name: "WeiboTablet.TimelineView",
-    kind: enyo.SlidingView,
+    kind: enyo.Scroller,
     layoutKind: enyo.VFlexLayout,
+    flex: 1,
     events:
 	{
     	"onTimelineTap": "",
@@ -9,153 +10,129 @@ enyo.kind({
 	},
     components: 
     [{
-        kind: enyo.Header,
-        className: "new_timeline",
-        layoutKind: enyo.HFlexLayout,
+    	name: "timeline",
+        kind: enyo.VirtualRepeater,
+        onSetupRow: "getTimeline",
         components:
         [{
-        	content: "picture icon"
-        },{
-            kind: enyo.Input,
-            name: "newTimelineInput",
-            oninput: "countCharacters",
-            hint: "what",
-            alwaysLooksFocused: true,
-            flex: 1,
-            inputClassName: "new_timeline_input_inner",
-            className: "new_timeline_input",
-            styled: false
-        },{
-        	name: "charactersCount",
-        	content: "140 left"
-        }]
-    },{
-        kind: enyo.Scroller,
-        name: "timeline",
-        flex: 1,
-        components:
-        [{
-            kind: enyo.VirtualRepeater,
-            onSetupRow: "getTimeline",
+            kind: enyo.Item,
+            layoutKind: enyo.HFlexLayout,
+            className: "timeline",
+            tapHighlight: true,
+            onclick: "timelineTapped",
             components:
             [{
-                kind: enyo.Item,
-                layoutKind: enyo.HFlexLayout,
-                className: "timeline",
-                tapHighlight: true,
-                onclick: "timelineTapped",
-                components:
+                kind: enyo.Image, 
+                name: "profileImage",
+                className: "avatar"
+            },{
+                kind: enyo.VFlexBox, 
+                pack: "center", 
+                className: "timeline_text",
+                flex: 1, 
+                components: 
                 [{
-                    kind: enyo.Image, 
-                    name: "profileImage",
-                    className: "avatar"
+                    name: "username",
+                    className: "timeline_username", 
+                    onclick: "usernameClicked",
+                    content: ""
                 },{
-                    kind: enyo.VFlexBox, 
-                    pack: "center", 
-                    className: "timeline_text",
-                    flex: 1, 
-                    components: 
+                	kind: enyo.HFlexBox,
+                	components:
+            		[{
+            			kind: enyo.Image, 
+                        name: "thumbnailPic",
+                        className: "thumbnail_pic"
+            		},{
+            			name: "text",
+            			kind: enyo.HtmlContent,
+            			onLinkClick: "linkClicked",
+                        content: "",
+                        flex: 1
+            		}]
+                },{
+                    kind: enyo.VFlexBox,
+                    name: "retweetedTimeline",
+                    className: "timeline retweeted",
+                    components:
                     [{
-                        name: "username",
-                        className: "timeline_username", 
+                        name: "retweetedUsername",
+                        onclick: "usernameClicked",
+                        className: "timeline_username_retweeted",
                         content: ""
                     },{
                     	kind: enyo.HFlexBox,
                     	components:
                 		[{
                 			kind: enyo.Image, 
-                            name: "thumbnailPic",
+                            name: "retweetedThumbnailPic",
                             className: "thumbnail_pic"
                 		},{
-                			name: "text",
-                			kind: enyo.HtmlContent,
-                			onLinkClick: "linkClicked",
+                            name: "retweetedText",
+                            kind: enyo.HtmlContent,
+                            onLinkClick: "linkClicked",
+                            className: "timeline_text_retweeted",
                             content: "",
                             flex: 1
                 		}]
                     },{
-                        kind: enyo.VFlexBox,
-                        name: "retweetedTimeline",
-                        className: "timeline retweeted",
-                        components:
-                        [{
-                            name: "retweetedUsername",
-                            className: "timeline_username_retweeted",
-                            content: ""
-                        },{
-                        	kind: enyo.HFlexBox,
-                        	components:
-                    		[{
-                    			kind: enyo.Image, 
-                                name: "retweetedThumbnailPic",
-                                className: "thumbnail_pic"
-                    		},{
-	                            name: "retweetedText",
-	                            kind: enyo.HtmlContent,
-	                            onLinkClick: "linkClicked",
-	                            className: "timeline_text_retweeted",
-	                            content: "",
-	                            flex: 1
-                    		}]
-                        },{
-                            kind: enyo.HFlexBox,
-                            components:
-                            [{
-                                name: "retweetedCreatedAt",
-                                className: "created_at_retweeted grey_text",
-                                content: ""
-                            },{
-                                name: "retweetedSource",
-                                className: "source_retweeted grey_text",
-                                content: ""
-                            },{
-                            	flex: 1
-                            },{
-                            	name: "retweetedRt",
-                            	pack: "end",
-                            	className: "counts_retweeted grey_text",
-                            	content: "转发"
-                            },{
-                            	name: "retweetedAddToFavorite",
-                            	pack: "end",
-                            	className: "counts_retweeted grey_text",
-                            	content: "收藏"
-                            },{
-                            	name: "retweetedComments",
-                            	pack: "end",
-                            	className: "counts_retweeted grey_text",
-                            	content: "评论"
-                            }]
-                        }]
-                    },{
                         kind: enyo.HFlexBox,
                         components:
                         [{
-                            name: "createdAt",
-                            className: "created_at grey_text",
+                            name: "retweetedCreatedAt",
+                            className: "created_at_retweeted grey_text",
                             content: ""
                         },{
-                            name: "source",
-                            className: "source grey_text",
+                            name: "retweetedSource",
+                            className: "source_retweeted grey_text",
                             content: ""
                         },{
                         	flex: 1
                         },{
-                        	name: "rt",
+                        	name: "retweetedRt",
                         	pack: "end",
-                        	className: "counts grey_text",
+                        	className: "counts_retweeted grey_text",
                         	content: "转发"
                         },{
-                        	name: "addToFavorite",
+                        	name: "retweetedAddToFavorite",
                         	pack: "end",
-                        	className: "counts grey_text",
+                        	className: "counts_retweeted grey_text",
                         	content: "收藏"
                         },{
-                        	name: "comments",
+                        	name: "retweetedComments",
                         	pack: "end",
-                        	className: "counts grey_text",
+                        	className: "counts_retweeted grey_text",
                         	content: "评论"
                         }]
+                    }]
+                },{
+                    kind: enyo.HFlexBox,
+                    components:
+                    [{
+                        name: "createdAt",
+                        className: "created_at grey_text",
+                        content: ""
+                    },{
+                        name: "source",
+                        className: "source grey_text",
+                        content: ""
+                    },{
+                    	flex: 1
+                    },{
+                    	name: "rt",
+                    	pack: "end",
+                    	className: "counts grey_text",
+                    	content: "转发"
+                    },{
+                    	name: "addToFavorite",
+                    	pack: "end",
+                    	className: "counts grey_text",
+                    	content: "收藏"
+                    },{
+                    	name: "comments",
+                    	pack: "end",
+                    	className: "counts grey_text",
+                    	content: "评论"
                     }]
                 }]
             }]
@@ -253,11 +230,6 @@ enyo.kind({
 			}
 		}
     },
-    countCharacters: function()
-    {
-    	var length = 139 - this.$.newTimelineInput.value.length;
-    	this.$.charactersCount.setContent(length + " left");
-    },
     refresh: function(timeline, counts)
     {
     	this.timeline = timeline;
@@ -273,5 +245,9 @@ enyo.kind({
     linkClicked: function (inSender, inUrl)
     {
     	this.doLinkClick(inUrl);
+    },
+    usernameClicked: function(inSender)
+    {
+    	this.doLinkClick("@" + inSender.getContent());
     }
 });
