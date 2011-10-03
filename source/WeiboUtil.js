@@ -140,7 +140,8 @@ var WeiboUtil = (function (WeiboUtil) {
 
 	   for (i in match)
 	   {
-		   text = text.replace(match[i], "<a href=\"" + match[i] + "\">" + 
+		   var regex = new RegExp(match[i] + "(?!([<\"]))");
+		   text = text.replace(regex, "<a href=\"" + match[i] + "\">" + 
 				   match[i] + "</a>");
 	   }
 	   

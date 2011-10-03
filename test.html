@@ -1,22 +1,25 @@
 <!doctype html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Weibo</title>
 <script src="source/oauth.js" type="text/javascript"></script>
 <script src="source/sha1.js" type="text/javascript"></script>
 </head>
 <body>
 <script type="text/javascript">
-	var text = "@ss����a��@suu #asd#,#sadh����ss#��˳���ͿƱ����ǩԼ��http://t.cn/aDaSXP,http://t.cn/aDaSXa"
+	var text = "回复@德国农村妇女:我真心觉得他们就是把我忘了！忘记把我关小黑屋了！忽然发现我还活着有点奇怪，还能呼吸就更奇怪，听说我要求释放更觉得不可思议！ //@德国农村妇女:你是不是有什么特难得地方了？？ //@不加V:当年的事没结束呢。我还在监禁之中。你们不能理解的。只会成天看我无所事事。";
 	 var match = [].concat(text.match(/@[\u4e00-\u9fa5\w\-]+/g),
 	 text.match(/#[^#|.]+#/g), text.match(/http:\/\/t.cn\/[\w]{5,6}/gi));	
    
    for (i in match)
    {
-   		text = text.replace(match[i], "<a href=\"\">" + match[i] + "</a>");
+   		 var regex = new RegExp(match[i] + "(?!([<\"]))");
+		   text = text.replace(regex, "<a href=\"" + match[i] + "\">" + 
+				   match[i] + "</a>");
    }
    
-   alert(encodeURIComponent(encodeURIComponent("����")) + "\n" + "%3D%25E6%25B5%258B%25E8%25AF%2595");
+   alert(text);
    
 </script>
 </body>
