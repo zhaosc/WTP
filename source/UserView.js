@@ -33,6 +33,7 @@ enyo.kind({
 			[{
 				kind: enyo.Header,
 				name: "username", 
+				onclick: "headerTapped",
 				content: ""
 			},{
 				name: "timelineView",
@@ -42,7 +43,12 @@ enyo.kind({
 				onTimelineTap: "timelineTapped",
 				onLinkClick: "linkClicked"
 			}]
-		}]
+		},{
+        	name: "sideViewOwner",
+        	kind: enyo.VFlexBox,
+        	style: "position: relative;",
+        	width: "240px"
+	    }]
     },{
         kind: enyo.Toolbar,
         pack: "justify",
@@ -67,6 +73,8 @@ enyo.kind({
     	this.$.grabTimeline.setUrl(url.url);
         this.$.grabTimeline.setHeaders(url.headers);
         this.$.grabTimeline.call();
+        
+        this.headerTapped();
     },
     grabUserShowSuccess: function(inSender, inResponse, inRequest)
     {
@@ -117,5 +125,47 @@ enyo.kind({
     linkClicked: function(inSender, inUrl)
     {
     	
+    },
+    timelineTapped: function(inSender, inTimeline, inCounts)
+    {
+    	if (this.$.sideView.kind != "WeiboTablet.CommentsView")
+		{
+    		this.$.sideView.destroy();
+    		
+        	var c = this.createComponent({
+        		name: "sideView",
+        		kind: "WeiboTablet.CommentsView",
+            	width: "240px"
+    		});
+        	
+        	c.renderInto(this.$.sideViewOwner.node);
+		}
+    	
+    	this.$.sideView.refresh(inTimeline, inCounts);
+    },
+    headerTapped: function() 
+    {
+    	if (this.$.sideViewOwner.hasNode() && 
+			(!this.$.sideView || this.$.sideView.kind == "WeiboTablet.CommentsView"))
+		{
+    		if (this.$.sideView == "WeiboTablet.CommentsView")
+			{
+    			this.$.sideView.destroy();
+			}
+    		
+        	var c = this.createComponent({
+        		name: "sideView",
+        		kind: enyo.VFlexBox,
+            	width: "240px",
+            	components:
+        		[{
+        			content: "标签"
+        		},{
+        			content: "话题"
+        		}]
+    		});
+        	
+        	c.renderInto(this.$.sideViewOwner.node);
+		}
     }
 });
