@@ -9,6 +9,21 @@ var WeiboUtil = (function (WeiboUtil) {
 			   {screen_name: screen_name});
    };
    
+   WeiboUtil.getFriendshipsShowURL = function(target_screen_name) {
+	   return getURL("http://api.t.sina.com.cn/friendships/show.json",
+			   {target_screen_name: target_screen_name});
+   };
+   
+   WeiboUtil.getTrendsURL = function(user_id) {
+	   return getURL("http://api.t.sina.com.cn/trends.json",
+			   {user_id: user_id});
+   };
+   
+   WeiboUtil.getTagsURL = function(user_id) {
+	   return getURL("http://api.t.sina.com.cn/tags.json",
+			   {user_id: user_id});
+   };
+   
    WeiboUtil.getUserTimelineURL = function(screen_name) {
 	   return getURL("http://api.t.sina.com.cn/statuses/user_timeline.json",
 			   {screen_name: screen_name});

@@ -24,7 +24,6 @@ enyo.kind({
             [{
                 kind: enyo.Image, 
                 name: "profileImage",
-                className: "avatar"
             },{
                 kind: enyo.VFlexBox, 
                 pack: "center", 
