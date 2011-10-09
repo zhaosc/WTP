@@ -4,9 +4,19 @@ var WeiboUtil = (function (WeiboUtil) {
    	   appKey = "61780054",
    	   secret = "d443b764c8b523e6e6c6ad254f6e369f";
    
-   WeiboUtil.getUserShowURL = function(screen_name) {
-	   return getURL("http://api.t.sina.com.cn/users/show.json",
+   WeiboUtil.getFriendsIdsURL = function(screen_name) {
+	   return getURL("http://api.t.sina.com.cn/friends/ids.json",
 			   {screen_name: screen_name});
+   };
+   
+   WeiboUtil.getFollowersIdsURL = function(screen_name) {
+	   return getURL("http://api.t.sina.com.cn/followers/ids.json",
+			   {screen_name: screen_name});
+   };
+   
+   WeiboUtil.getUserShowURL = function(screen_name, user_id) {
+	   return getURL("http://api.t.sina.com.cn/users/show.json",
+			   {screen_name: screen_name, user_id: user_id});
    };
    
    WeiboUtil.getFriendshipsShowURL = function(target_screen_name) {
@@ -256,7 +266,7 @@ var WeiboUtil = (function (WeiboUtil) {
 	   {
 		   for (var k in p) 
 		   {
-			   if (p.hasOwnProperty(k)) 
+			   if (p.hasOwnProperty(k) && p[k]) 
 			   { 
 				   url += "&" + k + "=" + p[k];
 			   }

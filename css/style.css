@@ -295,3 +295,13 @@ a:hover {
 	padding: 0 24px 0 24px;
 	white-space: pre-wrap;
 }
+
+/* user list view */
+.userList_user {
+	font-size: 14px;
+	color: #777;
+	line-height: 170%;
+	background: #fff;
+	padding: 12px 0;
+	border-bottom: 1px solid #ddd;
+}

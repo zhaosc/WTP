@@ -2,6 +2,10 @@ enyo.kind({
     name: "WeiboTablet.UserView",
     kind: enyo.SlidingView,
     layoutKind: enyo.VFlexLayout,
+    events:
+	{
+    	"onLinkClick": ""
+	},
     components: 
     [{
         kind: "WebService", 
@@ -98,8 +102,102 @@ enyo.kind({
 		},{
         	name: "sideViewOwner",
         	kind: enyo.VFlexBox,
-        	style: "position: relative;",
-        	width: "240px"
+        	width: "240px",
+        	components:
+    		[{
+    			name: "sideCountsView",
+        		className: "user_counts",
+        		kind: enyo.VFlexBox,
+        		flex: 1,
+            	width: "240px",
+            	components:
+        		[{
+        			kind: enyo.HFlexBox,
+        			className: "user_counts_toolbar",
+        			components:
+        			[{
+        				kind: enyo.VFlexBox,
+        				name: "statusesCount",
+        				onclick: "statusesCountTapped",
+        				align: "center",
+        				className: "user_counts_toolbar_item_selected",
+        				flex: 1,
+        				components:
+    					[{
+            				name: "statusesCountNum" 
+    					},{
+    						content: "微博"
+    					}]
+        			},{
+        				kind: enyo.VFlexBox,
+        				name: "friendsCount",
+        				onclick: "friendsCountTapped",
+        				align: "center",
+        				className: "user_counts_toolbar_item_unselected",
+        				flex: 1,
+        				components:
+    					[{
+    						name: "friendsCountNum"
+    					},{
+    						content: "关注"
+    					}]
+        			},{
+        				kind: enyo.VFlexBox,
+        				name: "followersCount",
+        				onclick: "followersCountTapped",
+        				align: "center",
+        				className: "user_counts_toolbar_item_unselected",
+        				flex: 1,
+        				components:
+    					[{
+    						name: "followersCountNum"
+    					},{
+    						content: "粉丝"
+    					}]
+        			}]
+        		},{
+        			name: "sideViewCountsDetailOwner",
+                	kind: enyo.VFlexBox,
+                	flex: 1,
+                	components:
+            		[{
+            			kind: enyo.Scroller,
+            			flex: 1,
+            			name: "counts",
+            			components:
+        				[{
+        					content: "话题",
+        					className: "user_counts_detail_item_header"
+        				},{
+        					name: "trends",
+        					kind: enyo.HtmlContent,
+        					className: "user_counts_detail_item"
+        				},{
+        					content: "标签",
+    						className: "user_counts_detail_item_header"
+        				},{
+        					name: "tags",
+        					className: "user_counts_detail_item"
+        				}]
+            		},{
+            			kind: "WeiboTablet.UserListView",
+            			name: "followersList",
+            			flex: 1,
+            			showing: false
+            		},{
+            			kind: "WeiboTablet.UserListView",
+            			name: "friendsList",
+            			flex: 1,
+            			showing: false
+            		}]
+        		}]
+    		},{
+    			name: "sideCommentsView",
+        		kind: "WeiboTablet.CommentsView",
+            	width: "240px",
+            	flex: 1,
+            	showing: false
+    		}]
 	    }]
     },{
         kind: enyo.Toolbar,
@@ -113,7 +211,11 @@ enyo.kind({
     }],
     refresh: function(username)
     {
+    	this.friendsRendered = false;
+    	this.followersRendered = false;
+    	
     	username = decodeURIComponent(username);
+    
     	this.$.basicInfo.setContent("<span class=\"user_username\">" + username + "</span>");
     	
     	var url = WeiboUtil.getUserShowURL(username);
@@ -156,6 +258,9 @@ enyo.kind({
     	this.$.domain.setContent("<a href=\"http://weibo.com/" + inResponse.domain +
     			"\">" + "http://weibo.com/" + inResponse.domain + "</a>");
     	this.$.description.setContent(inResponse.description);
+    	this.$.statusesCountNum.setContent(inResponse.statuses_count);
+    	this.$.friendsCountNum.setContent(inResponse.friends_count);
+    	this.$.followersCountNum.setContent(inResponse.followers_count);
     },
     grabUserShowFailure: function(inSender, inResponse, inRequest)
     {
@@ -227,7 +332,7 @@ enyo.kind({
     	for (i in inResponse)
 		{
     		trends += "<a href=\"#" + inResponse[i].hotword + "#\">" + 
-    			inResponse[i].hotword + "</a>&nbsp;&nbsp;";
+    		inResponse[i].hotword + "</a>&nbsp;&nbsp;";
 		}
     	
     	if (trends === "")
@@ -274,127 +379,75 @@ enyo.kind({
     },
     grabTagsFailure: function(inSender, inResponse, inRequest)
     {
-    },
-    timelineTapped: function(inSender, inTimeline, inCounts)
-    {
     	
     },
     linkClicked: function(inSender, inUrl)
     {
-    	
+    	this.doLinkClick(inUrl);
     },
     timelineTapped: function(inSender, inTimeline, inCounts)
     {
-    	if (this.$.sideCountsView)
-		{
-    		this.$.sideCountsView.destroy();
-    		
-        	var c = this.createComponent({
-        		name: "sideCommentsView",
-        		kind: "WeiboTablet.CommentsView",
-            	width: "240px"
-    		});
-        	
-        	c.renderInto(this.$.sideViewOwner.node);
-		}
-    	
+    	this.$.sideCountsView.hide();
+    	this.$.sideCommentsView.show();
     	this.$.sideCommentsView.refresh(inTimeline, inCounts);
     },
-    headerTapped: function(inSender, inEvent, refresh) 
+    headerTapped: function(inSender, inEvent) 
     {
-    	if (this.$.sideViewOwner.hasNode() && !this.$.sideCountsView)
+    	this.$.sideCountsView.show();
+    	this.$.sideCommentsView.hide();
+    	this.statusesCountTapped();
+    },
+    statusesCountTapped: function(inSender, inEvent)
+    {
+    	this.$.statusesCount.addClass("user_counts_toolbar_item_selected");
+    	this.$.statusesCount.removeClass("user_counts_toolbar_item_unselected");
+    	this.$.friendsCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.friendsCount.removeClass("user_counts_toolbar_item_selected");
+    	this.$.followersCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.followersCount.removeClass("user_counts_toolbar_item_selected");
+    	
+    	this.$.counts.show();
+    	this.$.friendsList.hide();
+		this.$.followersList.hide();
+    },
+    friendsCountTapped: function(inSender, inEvent)
+    {
+    	this.$.statusesCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.statusesCount.removeClass("user_counts_toolbar_item_selected");
+    	this.$.friendsCount.addClass("user_counts_toolbar_item_selected");
+    	this.$.friendsCount.removeClass("user_counts_toolbar_item_unselected");
+    	this.$.followersCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.followersCount.removeClass("user_counts_toolbar_item_selected");
+    	
+		this.$.counts.hide();
+		this.$.followersList.hide();
+    	
+		this.$.friendsList.show();
+		
+    	if (!this.friendsRendered)
 		{
-    		if (this.$.sideCommentsView)
-			{
-    			this.$.sideCommentsView.destroy();
-			}
-    		
-        	var c = this.createComponent({
-        		name: "sideCountsView",
-        		className: "user_counts",
-        		kind: enyo.VFlexBox,
-            	width: "240px",
-            	components:
-        		[{
-        			kind: enyo.HFlexBox,
-        			className: "user_counts_toolbar",
-        			components:
-        			[{
-        				kind: enyo.VFlexBox,
-        				onclick: "",
-        				align: "center",
-        				className: "user_counts_toolbar_item_selected",
-        				flex: 1,
-        				components:
-    					[{
-            				content: this.user.statuses_count
-    					},{
-    						content: "微博"
-    					}]
-        			},{
-        				kind: enyo.VFlexBox,
-        				onclick: "",
-        				align: "center",
-        				className: "user_counts_toolbar_item_unselected",
-        				flex: 1,
-        				components:
-    					[{
-    						content: this.user.friends_count
-    					},{
-    						content: "关注"
-    					}]
-        			},{
-        				kind: enyo.VFlexBox,
-        				onclick: "",
-        				align: "center",
-        				className: "user_counts_toolbar_item_unselected",
-        				flex: 1,
-        				components:
-    					[{
-    						content: this.user.followers_count
-    					},{
-    						content: "粉丝"
-    					}]
-        			}]
-        		},{
-        			name: "sideViewCountsDetailOwner",
-                	kind: enyo.VFlexBox,
-                	style: "position: relative;",
-                	flex: 1
-        		}]
-    		});
-        	
-        	c.renderInto(this.$.sideViewOwner.node);
-        	
-        	if (this.$.sideViewCountsDetailOwner.hasNode())
-    		{
-        		if (this.$.sideViewCountsDetail)
-    			{
-        			this.$.sideViewCountsDetail.destroy();
-    			}
-        		
-        		var d = this.createComponent({
-        			kind: enyo.Scroller,
-        			name: "sideViewCountsDetail",
-        			components:
-    				[{
-    					content: "话题",
-    					className: "user_counts_detail_item_header"
-    				},{
-    					name: "trends",
-    					kind: enyo.HtmlContent,
-    					className: "user_counts_detail_item"
-    				},{
-    					content: "标签",
-						className: "user_counts_detail_item_header"
-    				},{
-    					name: "tags",
-    					className: "user_counts_detail_item"
-    				}]
-        		});
-        		
-        		d.renderInto(this.$.sideViewCountsDetailOwner.node);
-    		}
+    		this.$.friendsList.refresh(WeiboUtil.getFriendsIdsURL(this.user.screen_name));
+    		this.friendsRendered = true;
+		}
+    },
+    followersCountTapped: function(inSender, inEvent)
+    {
+    	this.$.statusesCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.statusesCount.removeClass("user_counts_toolbar_item_selected");
+    	this.$.friendsCount.addClass("user_counts_toolbar_item_unselected");
+    	this.$.friendsCount.removeClass("user_counts_toolbar_item_selected");
+    	this.$.followersCount.addClass("user_counts_toolbar_item_selected");
+    	this.$.followersCount.removeClass("user_counts_toolbar_item_unselected");
+    	
+		this.$.counts.hide();
+		this.$.friendsList.hide();
+    	
+		this.$.followersList.show();
+		
+    	if (!this.followersRendered)
+		{
+    		this.$.followersList.refresh(WeiboUtil.getFollowersIdsURL(this.user.screen_name));
+    		this.followersRendered = true;
 		}
     }
 });

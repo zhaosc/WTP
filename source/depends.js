@@ -6,6 +6,7 @@ enyo.depends(
     "CommentsView.js",
     "StatusesView.js",
     "UserView.js",
+    "UserListView.js",
     "Login.js",
     "Splash.js",
     "WeiboUtil.js"

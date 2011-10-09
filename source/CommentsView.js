@@ -186,6 +186,10 @@ enyo.kind({
 				
 				return true;
 			}
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{

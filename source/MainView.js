@@ -63,7 +63,8 @@ enyo.kind
 		        	name: "userView",
 		            peekWidth:0,
 		            minWidth: 0,
-		            kind: "WeiboTablet.UserView"
+		            kind: "WeiboTablet.UserView",
+		            onLinkClick: "linkClicked"
 	        	}]
 		    }]
     	}]
