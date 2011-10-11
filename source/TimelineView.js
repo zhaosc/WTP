@@ -17,7 +17,7 @@ enyo.kind({
         [{
             kind: enyo.Item,
             layoutKind: enyo.HFlexLayout,
-            className: "timeline",
+            className: "timeline_item",
             tapHighlight: true,
             onclick: "timelineTapped",
             components:
@@ -27,7 +27,7 @@ enyo.kind({
             },{
                 kind: enyo.VFlexBox, 
                 pack: "center", 
-                className: "timeline_text",
+                className: "timeline",
                 flex: 1, 
                 components: 
                 [{
@@ -45,6 +45,7 @@ enyo.kind({
             		},{
             			name: "text",
             			kind: enyo.HtmlContent,
+            			className: "timeline_text", 
             			onLinkClick: "linkClicked",
                         content: "",
                         flex: 1
@@ -68,6 +69,7 @@ enyo.kind({
                             className: "thumbnail_pic"
                 		},{
                             name: "retweetedText",
+                            className: "timeline_text",
                             kind: enyo.HtmlContent,
                             onLinkClick: "linkClicked",
                             className: "timeline_text_retweeted",
@@ -165,17 +167,20 @@ enyo.kind({
             
             var c = this.getCounts(t.id);
             
-            if (c.comments != undefined && parseInt(c.comments) > 0)
+            if (c)
         	{
-            	this.$.comments.setContent(this.$.comments.getContent() + 
-            							   "(" + c.comments + ")");
+            	if (c.comments != undefined && parseInt(c.comments) > 0)
+            	{
+                	this.$.comments.setContent(this.$.comments.getContent() + 
+                							   "(" + c.comments + ")");
+            	}
+                
+                if (c.rt != undefined && parseInt(c.rt) > 0)
+                {
+                	this.$.rt.setContent(this.$.rt.getContent() + 
+                						 "(" + c.rt	 + ")");
+                }
         	}
-            
-            if (c.rt != undefined && parseInt(c.rt) > 0)
-            {
-            	this.$.rt.setContent(this.$.rt.getContent() + 
-            						 "(" + c.rt	 + ")");
-            }
             
             if (t.retweeted_status)
             {
@@ -194,7 +199,7 @@ enyo.kind({
                 	this.$.retweetedThumbnailPic.hide();
             	}
                 
-                var c = this.getCounts(t.retweeted_status.id);
+                c = this.getCounts(t.retweeted_status.id);
                 
                 if (c)
             	{

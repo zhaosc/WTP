@@ -4,6 +4,10 @@ var WeiboUtil = (function (WeiboUtil) {
    	   appKey = "61780054",
    	   secret = "d443b764c8b523e6e6c6ad254f6e369f";
    
+   WeiboUtil.getAccountVerifyCredentialsURL = function() {
+	   return getURL("http://api.t.sina.com.cn/account/verify_credentials.json");
+   };
+   
    WeiboUtil.getFriendsIdsURL = function(screen_name) {
 	   return getURL("http://api.t.sina.com.cn/friends/ids.json",
 			   {screen_name: screen_name});
@@ -178,34 +182,24 @@ var WeiboUtil = (function (WeiboUtil) {
 	   return text;
    };
    
-   var userInfo = [];
-   
-   WeiboUtil.getUserInfo = function() {
-	   if (userInfo.length == 0)
-	   {
-		   userInfo = localStorage.getItem("userInfo");
-		   
-		   if (userInfo == undefined)
-		   {
-			   userInfo = [];
-		   }
-		   else
-		   {
-			   userInfo = JSON.parse(userInfo)[0];
-		   }
-	   }
+   WeiboUtil.getFromStorage = function(key) {
 	   
-	   return userInfo;
+	   var item = localStorage.getItem(key);
+	   
+	   if (item)
+	   {
+		   return JSON.parse(item);
+	   }
+	   else
+	   {
+		   return undefined;
+	   }
    };
    
-   WeiboUtil.setUserInfo = function(userId, accessToken, accessTokenSecret) {
-	   var userInfoString = "[{\"userId\":\"" + userId + "\",\"accessToken\":\"" + 
-	   accessToken + "\",\"accessTokenSecret\":\"" +
-	   accessTokenSecret + "\"}]";
+   WeiboUtil.saveToStorage = function(key, json) {
 	   
-	   localStorage.setItem("userInfo", userInfoString);
+	   localStorage.setItem(key, JSON.stringify(json));
 	   
-	   userInfo = JSON.parse(userInfoString)[0];
    };
    
 
@@ -218,11 +212,12 @@ var WeiboUtil = (function (WeiboUtil) {
 	   oauth_nonce = OAuth.nonce(32),
 	   oauth_version = "1.0",
 	   method = "POST",
+	   access = WeiboUtil.getFromStorage("access"),
 	   parameters = 
 	   {
 		   oauth_consumer_key: oauth_consumer_key,
 		   oauth_nonce: oauth_nonce,
-		   oauth_token: WeiboUtil.getUserInfo().accessToken,
+		   oauth_token: access.accessToken,
 		   oauth_signature_method: oauth_signature_method,
 		   oauth_timestamp: oauth_timestamp,
 		   oauth_version: oauth_version,
@@ -246,8 +241,7 @@ var WeiboUtil = (function (WeiboUtil) {
 	   }),
 	   signer = OAuth.SignatureMethod.newMethod(
 			   oauth_signature_method, 
-			   {consumerSecret: consumerSecret, 
-			    tokenSecret: WeiboUtil.getUserInfo().accessTokenSecret}
+			   {consumerSecret: consumerSecret, tokenSecret: access.accessTokenSecret}
 	   ),
 	   oauth_signature = signer.getSignature(baseString);
 	   
@@ -255,7 +249,7 @@ var WeiboUtil = (function (WeiboUtil) {
 	   
 	   var url = a +
 	   "?oauth_consumer_key=" + oauth_consumer_key + 
-	   "&oauth_token=" + WeiboUtil.getUserInfo().accessToken + 
+	   "&oauth_token=" + access.accessToken + 
 	   "&oauth_nonce=" + oauth_nonce + 
 	   "&oauth_signature_method=" + oauth_signature_method + 
 	   "&oauth_timestamp=" + oauth_timestamp +

@@ -41,13 +41,16 @@ enyo.kind
 	        	    		name: "statuesesSlidingPane",
 	    			        components:
 	    			        [{
-	    			            name: "sidebarPane",
+	    			            name: "sidebar",
 	    			            kind: "WeiboTablet.Sidebar",
 	    			            width: "240px",
 	    			            peekWidth: 0,
 	    			            onHomeTap: "onHomeTap",
 	    			            onMentionsTap: "onMentionsTap",
-	    			            onFavoritesTap: "onFavoritesTap"
+	    			            onFavoritesTap: "onFavoritesTap",
+	    			            onStatusesTap: "onStatusesTap",
+	    			    		onFollowersTap: "onFollowersTap",
+	    			    		onFriendsTap: "onFriendsTap"
 	    			        },{
 	    			            name: "statusesView",
 	    			            width: "1024px",
@@ -76,18 +79,18 @@ enyo.kind
     checkLoggedIn: function()
     {
     	// TODO use user validation
-    	var userInfo = WeiboUtil.getUserInfo();
-		if (userInfo.length == 0)
+		if (WeiboUtil.getFromStorage("access"))
 		{
-			this.$.pane.selectViewByName("login");
+			this.onLoggedIn();
 		}
 		else
 		{
-			this.onLoggedIn();
+			this.$.pane.selectViewByName("login");
 		}
     },
     onLoggedIn: function()
     {
+    	this.$.sidebar.refresh();
     	this.$.statusesView.refresh("friendsTimeline");
     },
     onHomeTap: function()
@@ -101,6 +104,18 @@ enyo.kind
     onFavoritesTap: function()
     {
     	this.$.statusesView.refresh("favorites");
+    },
+    onStatusesTap: function()
+    {
+    	this.$.statusesView.refresh("statuses");
+    },
+    onFollowersTap: function()
+    {
+    	
+    },
+    onFriendsTap: function()
+    {
+    	
     },
     timelineTapped: function()
     {

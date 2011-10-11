@@ -103,7 +103,8 @@ enyo.kind
     	this.$.failureText.setContent(userId + "|" +
     			accessToken + "|" + accessTokenSecret);
     	
-    	WeiboUtil.setUserInfo(userId, accessToken, accessTokenSecret);
+    	WeiboUtil.saveToStorage("access", {userId: userId, accessToken: accessToken,
+    		accessTokenSecret: accessTokenSecret});
     	
     	this.doLoggedIn();
     },

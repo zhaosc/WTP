@@ -182,11 +182,13 @@ enyo.kind({
             		},{
             			kind: "WeiboTablet.UserListView",
             			name: "followersList",
+            			onLinkClick: "linkClicked",
             			flex: 1,
             			showing: false
             		},{
             			kind: "WeiboTablet.UserListView",
             			name: "friendsList",
+            			onLinkClick: "linkClicked",
             			flex: 1,
             			showing: false
             		}]

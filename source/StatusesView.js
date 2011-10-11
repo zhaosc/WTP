@@ -148,6 +148,10 @@ enyo.kind({
         {
         	url = WeiboUtil.getFavoritesURL();
         }
+        else if (type == "statuses")
+        {
+        	url = WeiboUtil.getUserTimelineURL();
+        }
         
         this.$.grabTimeline.setUrl(url.url);
         this.$.grabTimeline.setHeaders(url.headers);
