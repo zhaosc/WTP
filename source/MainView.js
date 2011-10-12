@@ -64,7 +64,7 @@ enyo.kind
         	    	}]
 	        	},{
 		        	name: "userView",
-		            peekWidth:0,
+		            peekWidth: 0,
 		            minWidth: 0,
 		            kind: "WeiboTablet.UserView",
 		            onLinkClick: "linkClicked"
@@ -111,11 +111,11 @@ enyo.kind
     },
     onFollowersTap: function()
     {
-    	
+    	this.$.statusesView.refresh("followers");
     },
     onFriendsTap: function()
     {
-    	
+    	this.$.statusesView.refresh("friends");
     },
     timelineTapped: function()
     {

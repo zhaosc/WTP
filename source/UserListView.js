@@ -61,10 +61,20 @@ enyo.kind({
 	        }]
 		}]
 	}],
-	refresh: function(url)
+	refresh: function(screenName, type)
 	{
-		this.limit = 25;
+		var limit = 10;
 		this.users = undefined;
+		var url;
+		
+		if (type === "friends")
+		{
+			url = WeiboUtil.getFriendsIdsURL(screenName, limit);
+		}
+		else if (type === "followers")
+		{
+			url = WeiboUtil.getFollowersIdsURL(screenName, limit);
+		}
 		
 		this.$.grabUserList.setUrl(url.url);
 		this.$.grabUserList.setHeaders(url.headers);
@@ -92,11 +102,11 @@ enyo.kind({
 	{
 		this.ids = inResponse;
 		
-		this.total = this.limit;
+		this.total = this.ids.ids.length;
 		
 		for (i in this.ids.ids)
 		{
-			if (i > this.limit - 1)
+			if (i > this.ids.ids.length - 1)
 			{
 				break;
 			}
@@ -135,6 +145,7 @@ enyo.kind({
 	grabUserShowFailure: function(inSender, inResponse, inRequest)
 	{
 		this.total = this.total - 1;
+		// retry at later stage
 		enyo.log("total: " + this.total + ", response: " + inResponse.toString());
 	},
 	userTapped: function(inSender, inEvent, inIndex)

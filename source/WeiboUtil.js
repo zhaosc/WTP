@@ -8,14 +8,14 @@ var WeiboUtil = (function (WeiboUtil) {
 	   return getURL("http://api.t.sina.com.cn/account/verify_credentials.json");
    };
    
-   WeiboUtil.getFriendsIdsURL = function(screen_name) {
+   WeiboUtil.getFriendsIdsURL = function(screen_name, count) {
 	   return getURL("http://api.t.sina.com.cn/friends/ids.json",
-			   {screen_name: screen_name});
+			   {screen_name: screen_name, count: count});
    };
    
-   WeiboUtil.getFollowersIdsURL = function(screen_name) {
+   WeiboUtil.getFollowersIdsURL = function(screen_name, count) {
 	   return getURL("http://api.t.sina.com.cn/followers/ids.json",
-			   {screen_name: screen_name});
+			   {screen_name: screen_name, count: count});
    };
    
    WeiboUtil.getUserShowURL = function(screen_name, user_id) {
@@ -23,9 +23,9 @@ var WeiboUtil = (function (WeiboUtil) {
 			   {screen_name: screen_name, user_id: user_id});
    };
    
-   WeiboUtil.getFriendshipsShowURL = function(target_screen_name) {
+   WeiboUtil.getFriendshipsShowURL = function(target_screen_name, target_id) {
 	   return getURL("http://api.t.sina.com.cn/friendships/show.json",
-			   {target_screen_name: target_screen_name});
+			   {target_screen_name: target_screen_name, target_id: target_id});
    };
    
    WeiboUtil.getTrendsURL = function(user_id) {

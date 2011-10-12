@@ -75,6 +75,16 @@ enyo.kind({
 				width: "784px",
 				onTimelineTap: "timelineTapped",
 				onLinkClick: "doLinkClick"
+		    },{
+		    	name: "followersListView",
+	            width: "784px",
+	            showing: false,
+	            kind: "WeiboTablet.DetailUserListView"
+		    },{
+		    	name: "friendsListView",
+	            width: "784px",
+	            showing: false,
+	            kind: "WeiboTablet.DetailUserListView"
 		    }]
 	    },{
         	name: "commentsView",
@@ -136,6 +146,7 @@ enyo.kind({
     	this.owner.$.splash.showSpinner();
     	
         var url;
+        var userList = false;
         if (type == "friendsTimeline")
     	{
         	url = WeiboUtil.getFriendsTimelineURL();
@@ -152,10 +163,30 @@ enyo.kind({
         {
         	url = WeiboUtil.getUserTimelineURL();
         }
+        else if (type == "followers")
+        {
+        	this.$.timelineView.hide();
+        	this.$.friendsListView.hide();
+        	this.$.followersListView.show();
+        	this.$.followersListView.refresh(WeiboUtil.getFromStorage("user").screen_name, type);
+        	return;
+        }
+        else if (type == "friends")
+        {
+        	this.$.timelineView.hide();
+        	this.$.followersListView.hide();
+        	this.$.friendsListView.show();
+        	this.$.friendsListView.refresh(WeiboUtil.getFromStorage("user").screen_name, type);
+        	return;
+        }
         
-        this.$.grabTimeline.setUrl(url.url);
-        this.$.grabTimeline.setHeaders(url.headers);
-        this.$.grabTimeline.call();
+		this.$.timelineView.show();
+		this.$.followersListView.hide();
+		this.$.friendsListView.hide();
+		
+		this.$.grabTimeline.setUrl(url.url);
+	    this.$.grabTimeline.setHeaders(url.headers);
+	    this.$.grabTimeline.call();
     },
     timelineTapped: function(inSender, inTimeline, inCounts)
     {

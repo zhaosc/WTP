@@ -81,7 +81,7 @@ enyo.kind({
 							},{
 								flex: 1
 							},{
-								name: "followButton",
+								name: "followButton"
 							}]
 						},{
 							kind: enyo.HtmlContent,
@@ -285,7 +285,7 @@ enyo.kind({
     	}
     	else
     	{
-    		this.$.followButton.setContent("关注");
+    		this.$.followButton.setContent("加关注");
     		this.$.followButton.setClassName("follow_button");
     	}
     },
@@ -428,7 +428,7 @@ enyo.kind({
 		
     	if (!this.friendsRendered)
 		{
-    		this.$.friendsList.refresh(WeiboUtil.getFriendsIdsURL(this.user.screen_name));
+    		this.$.friendsList.refresh(this.user.screen_name, "friends");
     		this.friendsRendered = true;
 		}
     },
@@ -448,7 +448,7 @@ enyo.kind({
 		
     	if (!this.followersRendered)
 		{
-    		this.$.followersList.refresh(WeiboUtil.getFollowersIdsURL(this.user.screen_name));
+    		this.$.followersList.refresh(this.user.screen_name, "followers");
     		this.followersRendered = true;
 		}
     }
