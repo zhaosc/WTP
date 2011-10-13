@@ -90,8 +90,13 @@ enyo.kind
     },
     onLoggedIn: function()
     {
+    	if (!WeiboUtil.getFromStorage("limit"))
+		{
+    		WeiboUtil.saveToStorage("limit", 20);
+		}
+    	
     	this.$.sidebar.refresh();
-    	this.$.statusesView.refresh("friendsTimeline");
+    	this.$.statusesView.refresh("friendsTimeline", true);
     },
     onHomeTap: function()
     {

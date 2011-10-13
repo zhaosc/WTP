@@ -43,8 +43,9 @@ var WeiboUtil = (function (WeiboUtil) {
 			   {screen_name: screen_name});
    };
    
-   WeiboUtil.getFriendsTimelineURL = function() {
-	   return getURL("http://api.t.sina.com.cn/statuses/friends_timeline.json");
+   WeiboUtil.getFriendsTimelineURL = function(count, since_id) {
+	   return getURL("http://api.t.sina.com.cn/statuses/friends_timeline.json",
+			   {count: count, since_id: since_id});
    };
    
    WeiboUtil.getMentionsURL = function() {
@@ -198,10 +199,29 @@ var WeiboUtil = (function (WeiboUtil) {
    
    WeiboUtil.saveToStorage = function(key, json) {
 	   
-	   localStorage.setItem(key, JSON.stringify(json));
+	   var exist = WeiboUtil.getFromStorage(key);
 	   
+	   if (exist)
+	   {
+		   if (type(exist) == "Array" && type(json) == "Array")
+		   {
+			   json = json.concat(exist);
+			   
+			   var limit = WeiboUtil.getFromStorage("limit");
+			   
+			   if (json.length > limit)
+			   {
+				   json = json.splice(limit, json.length - limit);
+			   }
+		   }
+	   }
+		   
+	   localStorage.setItem(key, JSON.stringify(json));
    };
    
+   function type(obj){
+	    return Object.prototype.toString.call(obj).match(/^\[object (.*)\]$/)[1];
+	}
 
    function getURL(a, p) 
    {

@@ -56,11 +56,12 @@ enyo.kind({
 			className: "sidebar_counts_toolbar",
 			components:
 			[{
-				kind: enyo.VFlexBox,
+				kind: enyo.Item,
+				layoutKind: enyo.VFlexLayout,
 				name: "statusesCount",
-				onclick: "statusesCountTapped",
+				className: "sidebar_item",
+				onclick: "onSidebarItemTap",
 				align: "center",
-				className: "user_counts_toolbar_item_unselected",
 				flex: 1,
 				components:
 				[{
@@ -69,11 +70,12 @@ enyo.kind({
 					content: "微博"
 				}]
 			},{
-				kind: enyo.VFlexBox,
+				kind: enyo.Item,
+				layoutKind: enyo.VFlexLayout,
 				name: "friendsCount",
-				onclick: "friendsCountTapped",
+				className: "sidebar_item",
+				onclick: "onSidebarItemTap",
 				align: "center",
-				className: "user_counts_toolbar_item_unselected",
 				flex: 1,
 				components:
 				[{
@@ -82,11 +84,12 @@ enyo.kind({
 					content: "关注"
 				}]
 			},{
-				kind: enyo.VFlexBox,
+				kind: enyo.Item,
+				layoutKind: enyo.VFlexLayout,
 				name: "followersCount",
-				onclick: "followersCountTapped",
+				className: "sidebar_item",
+				onclick: "onSidebarItemTap",
 				align: "center",
-				className: "user_counts_toolbar_item_unselected",
 				flex: 1,
 				components:
 				[{
@@ -191,7 +194,17 @@ enyo.kind({
 	{
 		for (i in this.$.sidebarBody.controls)
 		{
-			this.$.sidebarBody.controls[i].setState("down", false);
+			if (i == 0)
+			{
+				for (j in this.$.sidebarBody.controls[i].controls)
+				{
+					this.$.sidebarBody.controls[i].controls[j].setState("down", false);
+				}
+			}
+			else
+			{
+				this.$.sidebarBody.controls[i].setState("down", false);
+			}
 		}
 		
 		inSender.setState("down", true);
@@ -208,6 +221,18 @@ enyo.kind({
 		{
 			this.doFavoritesTap();
 		}
+		else if (inSender.name == "statusesCount")
+		{
+			this.doStatusesTap();
+		}
+		else if (inSender.name == "followersCount")
+		{
+			this.doFollowersTap();
+		}
+		else if (inSender.name == "friendsCount")
+		{
+			this.doFriendsTap();
+		}
 	},
     grabAccountVerifyCredentialsSuccess: function(inSender, inResponse, inRequest)
     {
@@ -217,38 +242,5 @@ enyo.kind({
     grabAccountVerifyCredentialsFailure: function(inSender, inResponse, inRequest)
     {
     	
-    },
-    statusesCountTapped: function(inSender, inEvent)
-    {
-    	this.$.statusesCount.addClass("user_counts_toolbar_item_selected");
-    	this.$.statusesCount.removeClass("user_counts_toolbar_item_unselected");
-    	this.$.friendsCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.friendsCount.removeClass("user_counts_toolbar_item_selected");
-    	this.$.followersCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.followersCount.removeClass("user_counts_toolbar_item_selected");
-    	
-    	this.doStatusesTap();
-    },
-    friendsCountTapped: function(inSender, inEvent)
-    {
-    	this.$.statusesCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.statusesCount.removeClass("user_counts_toolbar_item_selected");
-    	this.$.friendsCount.addClass("user_counts_toolbar_item_selected");
-    	this.$.friendsCount.removeClass("user_counts_toolbar_item_unselected");
-    	this.$.followersCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.followersCount.removeClass("user_counts_toolbar_item_selected");
-    	
-    	this.doFriendsTap();
-    },
-    followersCountTapped: function(inSender, inEvent)
-    {
-    	this.$.statusesCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.statusesCount.removeClass("user_counts_toolbar_item_selected");
-    	this.$.friendsCount.addClass("user_counts_toolbar_item_unselected");
-    	this.$.friendsCount.removeClass("user_counts_toolbar_item_selected");
-    	this.$.followersCount.addClass("user_counts_toolbar_item_selected");
-    	this.$.followersCount.removeClass("user_counts_toolbar_item_unselected");
-    	
-    	this.doFollowersTap();
     }
 });

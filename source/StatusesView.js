@@ -79,12 +79,14 @@ enyo.kind({
 		    	name: "followersListView",
 	            width: "784px",
 	            showing: false,
-	            kind: "WeiboTablet.DetailUserListView"
+	            kind: "WeiboTablet.DetailUserListView",
+	            onLinkClick: "doLinkClick"
 		    },{
 		    	name: "friendsListView",
 	            width: "784px",
 	            showing: false,
-	            kind: "WeiboTablet.DetailUserListView"
+	            kind: "WeiboTablet.DetailUserListView",
+	            onLinkClick: "doLinkClick"
 		    }]
 	    },{
         	name: "commentsView",
@@ -103,25 +105,34 @@ enyo.kind({
     }],
     grabTimelineSuccess: function(inSender, inResponse, inRequest)
     {
-        this.timeline = inResponse;
-        
-        var ids = "";
-        for (var i = 0; i < inResponse.length; i++)
-        {
-        	ids += inResponse[i].id + ",";
-        	
-        	if (inResponse[i].retweeted_status)
-    		{
-        		ids += inResponse[i].retweeted_status.id + ",";
-    		}
-        }
-        
-        ids = ids.substring(0, ids.length - 1);
-        
-        var url = WeiboUtil.getCountsURL(ids);
-        this.$.grabCounts.setUrl(url.url);
-        this.$.grabCounts.setHeaders(url.headers);
-        this.$.grabCounts.call();
+    	if (inResponse.length > 0)
+		{
+			this.timeline = inResponse.concat(this.timeline);
+	        
+	        WeiboUtil.saveToStorage(this.type, inResponse);
+	        
+	        var ids = "";
+	        for (var i = 0; i < inResponse.length; i++)
+	        {
+	        	ids += inResponse[i].id + ",";
+	        	
+	        	if (inResponse[i].retweeted_status)
+	    		{
+	        		ids += inResponse[i].retweeted_status.id + ",";
+	    		}
+	        }
+	        
+	        ids = ids.substring(0, ids.length - 1);
+	        
+	        var url = WeiboUtil.getCountsURL(ids);
+	        this.$.grabCounts.setUrl(url.url);
+	        this.$.grabCounts.setHeaders(url.headers);
+	        this.$.grabCounts.call();
+		}
+    	else
+		{
+    		this.$.timelineView.refresh(this.timeline, this.counts);
+		}
     },
     grabTimelineFailure: function(inSender, inResponse, inRequest)
     {
@@ -130,7 +141,8 @@ enyo.kind({
     },
     grabCountsSuccess: function(inSender, inResponse, inRequest)
     {
-    	this.counts = inResponse;
+		this.counts = inResponse.concat(this.counts);
+    	WeiboUtil.saveToStorage(this.type + "_counts", inResponse);
     	
     	this.doDataGrabbed();
     	
@@ -141,15 +153,34 @@ enyo.kind({
     	this.$.timelineFailurePopup.openAtCenter();
     	this.$.timelineFailureText.setContent(inResponse);
     },
-    refresh: function(type)
+    refresh: function(type, force)
     {
     	this.owner.$.splash.showSpinner();
+    	this.type = type;
+    	var count = 10;
+    	this.timeline = WeiboUtil.getFromStorage(this.type);
+		this.counts = WeiboUtil.getFromStorage(this.type + "_counts");
+		
+    	if (!this.timeline)
+		{
+    		this.timeline = [];
+		}
+    	if (!this.counts)
+    	{
+    		this.counts = [];
+    	}
+    	
+    	var since_id;
+		if (this.timeline.length > 0)
+		{
+    		since_id = this.timeline[0].id;
+		}
     	
         var url;
         var userList = false;
         if (type == "friendsTimeline")
     	{
-        	url = WeiboUtil.getFriendsTimelineURL();
+        	url = WeiboUtil.getFriendsTimelineURL(count, since_id);
     	}
         else if (type == "mentions")
     	{
@@ -184,9 +215,16 @@ enyo.kind({
 		this.$.followersListView.hide();
 		this.$.friendsListView.hide();
 		
-		this.$.grabTimeline.setUrl(url.url);
-	    this.$.grabTimeline.setHeaders(url.headers);
-	    this.$.grabTimeline.call();
+		if (force)
+		{
+			this.$.grabTimeline.setUrl(url.url);
+		    this.$.grabTimeline.setHeaders(url.headers);
+		    this.$.grabTimeline.call();
+		}
+		else
+		{
+			this.$.timelineView.refresh(this.timeline, this.counts);
+		}
     },
     timelineTapped: function(inSender, inTimeline, inCounts)
     {

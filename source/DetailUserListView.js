@@ -4,7 +4,7 @@ enyo.kind({
     flex: 1,
 	events:
 	{
-    	"onUserClick": ""
+    	"onLinkClick": ""
 	},
 	components:
 	[{
@@ -39,19 +39,22 @@ enyo.kind({
 	            kind: enyo.Item,
 	            layoutKind: enyo.HFlexLayout,
 	            onclick: "userTapped",
+	            className: "detail_user_item",
 				components:
 				[{
 					kind: enyo.Image, 
 		            name: "profileImage",
 				},{
 					kind: enyo.VFlexbBox,
+					className: "detail_user_text",
 					flex: 1,
 					components:
 					[{
 						kind:enyo.HFlexBox,
 						components:
 						[{
-							name: "username"
+							name: "username",
+							className: "timeline_username",
 						},{
 							flex: 1
 						},{
@@ -65,13 +68,15 @@ enyo.kind({
 							className: "gender_icon",
 							name: "gender"
 						},{
-							name: "location"
+							name: "location",
+							style: "paading-right: 10px;"
 						},{
 							name: "followersCount",
 							content: "粉丝数"
 						}]
 					},{
-						name: "status"
+						name: "status",
+						className: "grey_text"
 					}]
 				}]
 	        }]
@@ -242,6 +247,6 @@ enyo.kind({
     },
 	userTapped: function(inSender, inEvent, inIndex)
 	{
-		this.doLinkClick("@" + this.$.username);
+		this.doLinkClick("@" + this.users[inIndex].screen_name);
 	}
 });

@@ -24,7 +24,7 @@ a:hover {
 }
 
 .grey_text {
-	color: #888;
+	color: #aaa;
 }
 
 /* Splash */
@@ -153,20 +153,11 @@ a:hover {
 	background: #f9f9f9;
 }
 
-.sidebar_counts_toolbar {
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #ddd;
-	color: #777;
-	background: #fff;
-    font-size: 16px;
-}
-
 .sidebar_item {
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #ddd;
-	color: #777;
-    font-size: 16px;
     padding: 10px 15px;
+    font-size: 16px;
 }
 
 .enyo-down {
@@ -314,4 +305,16 @@ a:hover {
 	background: #fff;
 	padding: 12px 0;
 	border-bottom: 1px solid #ddd;
+}
+
+/* Detail user list view */
+.detail_user_item {
+    background: #fff;
+    padding: 15px 30px 15px 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+.detail_user_text {
+	padding-left: 20px;
 }

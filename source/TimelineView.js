@@ -141,9 +141,9 @@ enyo.kind({
     }],
     getTimeline: function(inSender, inIndex)
     {
-    	if (!this.timeline)
+    	if (!this.timeline || this.timeline.length == 0)
 		{
-    		return;
+    		return false;
 		}
     	
         var t = this.timeline[inIndex];
@@ -223,6 +223,10 @@ enyo.kind({
             
             return true;
         }
+        else
+    	{
+        	return false;
+    	}
     },
     getCounts: function(id)
     {
