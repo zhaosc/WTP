@@ -20,48 +20,44 @@ enyo.kind({
         onSuccess: "grabUserShowSuccess",
         onFailure: "grabUserShowFailure"
     },{
-    	kind: enyo.Scroller,
-    	flex: 1,
+		kind: enyo.VirtualList,
+		flex: 1,
     	name: "userList",
-    	components:
-		[{
-			kind: enyo.VirtualRepeater,
-	        onSetupRow: "setupContent",
-	        components:
-	        [{
-	            kind: enyo.Item,
-	            className: "userList_user",
-	            layoutKind: enyo.HFlexLayout,
-	            onclick: "userTapped",
+        onSetupRow: "setupContent",
+        components:
+        [{
+            kind: enyo.Item,
+            className: "userList_user",
+            layoutKind: enyo.HFlexLayout,
+            onclick: "userTapped",
+			components:
+			[{
+				kind: enyo.Image, 
+	            name: "profileImage",
+	            className: "comments_avatar"
+			},{
+				kind: enyo.VFlexbBox,
+				flex: 1,
 				components:
 				[{
-					kind: enyo.Image, 
-		            name: "profileImage",
-		            className: "comments_avatar"
+					name: "username"
 				},{
-					kind: enyo.VFlexbBox,
-					flex: 1,
+					kind: enyo.HFlexBox,
 					components:
 					[{
-						name: "username"
+						kind: enyo.Image,
+						className: "gender_icon",
+						name: "gender"
 					},{
-						kind: enyo.HFlexBox,
-						components:
-						[{
-							kind: enyo.Image,
-							className: "gender_icon",
-							name: "gender"
-						},{
-							name: "location"
-						}]
-					},{
-						name: "counts"
+						name: "location"
 					}]
+				},{
+					name: "counts"
 				}]
-	        }]
-		}]
+			}]
+        }]
 	}],
-	refresh: function(screenName, type)
+	redo: function(screenName, type)
 	{
 		var limit = 10;
 		this.users = undefined;
@@ -139,7 +135,7 @@ enyo.kind({
 		
 		if (this.users.length == this.total)
 		{
-			this.$.userList.render();
+			this.$.userList.punt();
 		}
 	},
 	grabUserShowFailure: function(inSender, inResponse, inRequest)

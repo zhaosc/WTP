@@ -27,62 +27,58 @@ enyo.kind({
         onSuccess: "grabFriendshipsShowSuccess",
         onFailure: "grabFriendshipsShowFailure"
     },{
-    	kind: enyo.Scroller,
-    	flex: 1,
+		kind: enyo.VirtualList,
+		flex: 1,
     	name: "userList",
-    	components:
-		[{
-			kind: enyo.VirtualRepeater,
-	        onSetupRow: "setupContent",
-	        components:
-	        [{
-	            kind: enyo.Item,
-	            layoutKind: enyo.HFlexLayout,
-	            onclick: "userTapped",
-	            className: "detail_user_item",
+        onSetupRow: "setupContent",
+        components:
+        [{
+            kind: enyo.Item,
+            layoutKind: enyo.HFlexLayout,
+            onclick: "userTapped",
+            className: "detail_user_item",
+			components:
+			[{
+				kind: enyo.Image, 
+	            name: "profileImage",
+			},{
+				kind: enyo.VFlexbBox,
+				className: "detail_user_text",
+				flex: 1,
 				components:
 				[{
-					kind: enyo.Image, 
-		            name: "profileImage",
-				},{
-					kind: enyo.VFlexbBox,
-					className: "detail_user_text",
-					flex: 1,
+					kind:enyo.HFlexBox,
 					components:
 					[{
-						kind:enyo.HFlexBox,
-						components:
-						[{
-							name: "username",
-							className: "timeline_username",
-						},{
-							flex: 1
-						},{
-							name: "followButton"
-						}]
+						name: "username",
+						className: "timeline_username",
 					},{
-						kind: enyo.HFlexBox,
-						components:
-						[{
-							kind: enyo.Image,
-							className: "gender_icon",
-							name: "gender"
-						},{
-							name: "location",
-							style: "paading-right: 10px;"
-						},{
-							name: "followersCount",
-							content: "粉丝数"
-						}]
+						flex: 1
 					},{
-						name: "status",
-						className: "grey_text"
+						name: "followButton"
 					}]
+				},{
+					kind: enyo.HFlexBox,
+					components:
+					[{
+						kind: enyo.Image,
+						className: "gender_icon",
+						name: "gender"
+					},{
+						name: "location",
+						style: "paading-right: 10px;"
+					},{
+						name: "followersCount",
+						content: "粉丝数"
+					}]
+				},{
+					name: "status",
+					className: "grey_text"
 				}]
-	        }]
-		}]
+			}]
+        }]
 	}],
-	refresh: function(screenName, type)
+	redo: function(screenName, type)
 	{
 		if (!this.users)
 		{
@@ -212,7 +208,7 @@ enyo.kind({
 		if (this.gotUsers == this.validUsers && 
 			this.gotFriendships == this.validFriendships)
 		{
-			this.$.userList.render();
+			this.$.userList.punt();
 		}
 	},
 	grabUserShowFailure: function(inSender, inResponse, inRequest)
@@ -237,7 +233,7 @@ enyo.kind({
 		if (this.gotUsers == this.validUsers && 
 			this.gotFriendships == this.validFriendships)
 		{
-			this.$.userList.render();
+			this.$.userList.punt();
 		}
     },
     grabFriendshipsShowFailure: function(inSender, inResponse, inRequest)

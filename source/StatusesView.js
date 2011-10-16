@@ -131,7 +131,7 @@ enyo.kind({
 		}
     	else
 		{
-    		this.$.timelineView.refresh(this.timeline, this.counts);
+    		this.$.timelineView.redo(this.timeline, this.counts);
 		}
     },
     grabTimelineFailure: function(inSender, inResponse, inRequest)
@@ -146,14 +146,14 @@ enyo.kind({
     	
     	this.doDataGrabbed();
     	
-    	this.$.timelineView.refresh(this.timeline, this.counts);
+    	this.$.timelineView.redo(this.timeline, this.counts);
     },
     grabCountsFailure: function(inSender, inResponse, inRequest)
     {
     	this.$.timelineFailurePopup.openAtCenter();
     	this.$.timelineFailureText.setContent(inResponse);
     },
-    refresh: function(type, force)
+    redo: function(type, force)
     {
     	this.owner.$.splash.showSpinner();
     	this.type = type;
@@ -199,7 +199,7 @@ enyo.kind({
         	this.$.timelineView.hide();
         	this.$.friendsListView.hide();
         	this.$.followersListView.show();
-        	this.$.followersListView.refresh(WeiboUtil.getFromStorage("user").screen_name, type);
+        	this.$.followersListView.redo(WeiboUtil.getFromStorage("user").screen_name, type);
         	return;
         }
         else if (type == "friends")
@@ -207,7 +207,7 @@ enyo.kind({
         	this.$.timelineView.hide();
         	this.$.followersListView.hide();
         	this.$.friendsListView.show();
-        	this.$.friendsListView.refresh(WeiboUtil.getFromStorage("user").screen_name, type);
+        	this.$.friendsListView.redo(WeiboUtil.getFromStorage("user").screen_name, type);
         	return;
         }
         
@@ -223,13 +223,13 @@ enyo.kind({
 		}
 		else
 		{
-			this.$.timelineView.refresh(this.timeline, this.counts);
+			this.$.timelineView.redo(this.timeline, this.counts);
 		}
     },
     timelineTapped: function(inSender, inTimeline, inCounts)
     {
     	this.doTimelineTap();
-    	this.$.commentsView.refresh(inTimeline, inCounts);
+    	this.$.commentsView.redo(inTimeline, inCounts);
     },
     countCharacters: function()
     {

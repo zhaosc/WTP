@@ -1,7 +1,6 @@
 enyo.kind({
     name: "WeiboTablet.TimelineView",
-    kind: enyo.Scroller,
-    layoutKind: enyo.VFlexLayout,
+    kind: enyo.VFlexBox,
     flex: 1,
     events:
 	{
@@ -11,7 +10,8 @@ enyo.kind({
     components: 
     [{
     	name: "timeline",
-        kind: enyo.VirtualRepeater,
+    	flex: 1,
+        kind: enyo.VirtualList,
         onSetupRow: "getTimeline",
         components:
         [{
@@ -238,12 +238,12 @@ enyo.kind({
 			}
 		}
     },
-    refresh: function(timeline, counts)
+    redo: function(timeline, counts)
     {
     	this.timeline = timeline;
     	this.counts = counts;
     	
-    	this.$.timeline.render();
+    	this.$.timeline.punt();
     },
     timelineTapped: function(inSender, inEvent)
     {

@@ -95,32 +95,32 @@ enyo.kind
     		WeiboUtil.saveToStorage("limit", 20);
 		}
     	
-    	this.$.sidebar.refresh();
-    	this.$.statusesView.refresh("friendsTimeline", true);
+    	this.$.sidebar.redo();
+    	this.$.statusesView.redo("friendsTimeline", true);
     },
     onHomeTap: function()
     {
-    	this.$.statusesView.refresh("friendsTimeline");
+    	this.$.statusesView.redo("friendsTimeline");
     },
     onMentionsTap: function()
     {
-    	this.$.statusesView.refresh("mentions");
+    	this.$.statusesView.redo("mentions");
     },
     onFavoritesTap: function()
     {
-    	this.$.statusesView.refresh("favorites");
+    	this.$.statusesView.redo("favorites");
     },
     onStatusesTap: function()
     {
-    	this.$.statusesView.refresh("statuses");
+    	this.$.statusesView.redo("statuses");
     },
     onFollowersTap: function()
     {
-    	this.$.statusesView.refresh("followers");
+    	this.$.statusesView.redo("followers");
     },
     onFriendsTap: function()
     {
-    	this.$.statusesView.refresh("friends");
+    	this.$.statusesView.redo("friends");
     },
     timelineTapped: function()
     {
@@ -135,7 +135,7 @@ enyo.kind
     	if (inUrl.indexOf("@") != -1)
 		{
     		var username = inUrl.substring(inUrl.indexOf("@") + 1);
-    		this.$.userView.refresh(username);
+    		this.$.userView.redo(username);
     		this.$.mainSlidingPane.selectView(this.$.userView);
 		}
     }

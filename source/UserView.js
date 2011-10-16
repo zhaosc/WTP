@@ -211,7 +211,7 @@ enyo.kind({
             flex: 1
         }]
     }],
-    refresh: function(username)
+    redo: function(username)
     {
     	this.friendsRendered = false;
     	this.followersRendered = false;
@@ -322,7 +322,7 @@ enyo.kind({
     {
     	this.counts = inResponse;
     	
-    	this.$.timelineView.refresh(this.timeline, this.counts);
+    	this.$.timelineView.redo(this.timeline, this.counts);
     },
     grabCountsFailure: function(inSender, inResponse, inRequest)
     {
@@ -391,7 +391,7 @@ enyo.kind({
     {
     	this.$.sideCountsView.hide();
     	this.$.sideCommentsView.show();
-    	this.$.sideCommentsView.refresh(inTimeline, inCounts);
+    	this.$.sideCommentsView.redo(inTimeline, inCounts);
     },
     headerTapped: function(inSender, inEvent) 
     {
@@ -428,7 +428,7 @@ enyo.kind({
 		
     	if (!this.friendsRendered)
 		{
-    		this.$.friendsList.refresh(this.user.screen_name, "friends");
+    		this.$.friendsList.redo(this.user.screen_name, "friends");
     		this.friendsRendered = true;
 		}
     },
@@ -448,7 +448,7 @@ enyo.kind({
 		
     	if (!this.followersRendered)
 		{
-    		this.$.followersList.refresh(this.user.screen_name, "followers");
+    		this.$.followersList.redo(this.user.screen_name, "followers");
     		this.followersRendered = true;
 		}
     }

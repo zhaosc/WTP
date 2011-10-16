@@ -68,40 +68,36 @@ enyo.kind({
 	        styled: false
 		}]
 	},{
-		kind: enyo.Scroller,
+		kind: enyo.VirtualList,
 		flex: 1,
 		name: "contents",
-		components:
-		[{
-			kind: enyo.VirtualRepeater,
-            onSetupRow: "setupContent",
-            components:
-            [{
-                kind: enyo.Item,
-                layoutKind: enyo.HFlexLayout,
-                className: "comment",
+        onSetupRow: "setupContent",
+        components:
+        [{
+            kind: enyo.Item,
+            layoutKind: enyo.HFlexLayout,
+            className: "comment",
+			components:
+			[{
+				kind: enyo.Image, 
+	            name: "profileImage",
+	            className: "comments_avatar"
+			},{
+				kind: enyo.VFlexbBox,
+				flex: 1,
 				components:
 				[{
-					kind: enyo.Image, 
-		            name: "profileImage",
-		            className: "comments_avatar"
+					name: "username",
+					className: "comments_username"
 				},{
-					kind: enyo.VFlexbBox,
-					flex: 1,
-					components:
-					[{
-						name: "username",
-						className: "comments_username"
-					},{
-						name: "content",
-						style: "padding-right: 12px;",
-						content: ""
-					}]
+					name: "content",
+					style: "padding-right: 12px;",
+					content: ""
 				}]
-            }]
-		}]
+			}]
+        }]
 	}],
-	refresh: function(timeline, counts)
+	redo: function(timeline, counts)
 	{
 		if (!this.timeline || this.timeline.id != timeline.id)
 		{
@@ -145,7 +141,7 @@ enyo.kind({
 	grabCommentsSuccess: function(inSender, inResponse, inRequest)
 	{
 		this.comments = inResponse;
-		this.$.contents.render();
+		this.$.contents.punt();
 	},
 	grabCommentsFailure: function()
 	{
@@ -154,7 +150,7 @@ enyo.kind({
 	grabRepostTimelineSuccess: function(inSender, inResponse, inRequest)
 	{
 		this.rt = inResponse;
-		this.$.contents.render();
+		this.$.contents.punt();
 	},
 	grabRepostTimelineFailure: function()
 	{
@@ -201,7 +197,7 @@ enyo.kind({
 		this.contentType = "comments";
 		this.$.commentsButton.addClass("comments_button_selected");
 		this.$.rtButton.removeClass("comments_button_selected");
-		this.$.contents.render();
+		this.$.contents.punt();
 	},
 	rtButtonTapped: function()
 	{
@@ -213,7 +209,7 @@ enyo.kind({
 		{
 			if (this.rt)
 			{
-				this.$.contents.render();
+				this.$.contents.punt();
 			}
 			else
 			{

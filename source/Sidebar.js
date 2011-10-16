@@ -170,9 +170,9 @@ enyo.kind({
 	}],
 	ready: function()
 	{
-		this.update(WeiboUtil.getFromStorage("user"));
+		this.updateUser(WeiboUtil.getFromStorage("user"));
 	},
-	update: function(user)
+	updateUser: function(user)
 	{
 		if (user)
 		{
@@ -183,7 +183,7 @@ enyo.kind({
 			this.$.profileImage.setSrc(user.profile_image_url);
 		}
 	},
-	refresh: function()
+	redo: function()
 	{
 		var url = WeiboUtil.getAccountVerifyCredentialsURL();
     	this.$.grabAccountVerifyCredentials.setUrl(url.url);
@@ -236,7 +236,7 @@ enyo.kind({
 	},
     grabAccountVerifyCredentialsSuccess: function(inSender, inResponse, inRequest)
     {
-    	this.update(inResponse);
+    	this.updateUser(inResponse);
     	WeiboUtil.saveToStorage("user", inResponse);
     },
     grabAccountVerifyCredentialsFailure: function(inSender, inResponse, inRequest)
